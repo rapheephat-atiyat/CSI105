@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            border: 1px solid black;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .view {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .item {
+            border: 1px solid black;
+            padding: 8px 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Stack & Queue</h2>
+
+        <!-- STACK -->
+
+        <div class="box">
+
+            <h3>Stack (LIFO)</h3>
+
+            <div class="controls">
+
+                <select id="stackMethod" onchange="updateStackInput()">
+                    <option value="push">push</option>
+                    <option value="pop">pop</option>
+                    <option value="peek">peek</option>
+                    <option value="clear">clear</option>
+                </select>
+
+                <input id="stackValue" placeholder="value">
+
+                <button onclick="runStack()">Run</button>
+
+                <span id="stackInfo"></span>
+
+            </div>
+
+            <div class="view" id="stackView"></div>
+
+        </div>
+
+
+        <div class="box">
+
+            <h3>Queue (FIFO)</h3>
+
+            <div class="controls">
+
+                <select id="queueMethod" onchange="updateQueueInput()">
+                    <option value="enqueue">enqueue</option>
+                    <option value="dequeue">dequeue</option>
+                    <option value="peek">peek</option>
+                    <option value="clear">clear</option>
+                </select>
+
+                <input id="queueValue" placeholder="value">
+
+                <button onclick="runQueue()">Run</button>
+
+                <span id="queueInfo"></span>
+
+            </div>
+
+            <div class="view" id="queueView"></div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        class Stack {
+            constructor() {
+                this.stack = []
+            }
+
+            push(val) {
+                this.stack.push(val)
+            }
+
+            pop() {
+                return this.stack.pop()
+            }
+
+            peek() {
+                return this.stack.length > 0 ? this.stack[this.stack.length - 1] : null
+            }
+
+            clear() {
+                this.stack = []
+            }
+
+            get size() {
+                return this.stack.length
+            }
+
+        }
+
+        class Queue {
+
+            constructor() {
+                this.queue = []
+            }
+
+            enqueue(val) {
+                this.queue.push(val)
+            }
+
+            dequeue() {
+                return this.queue.shift()
+            }
+
+            peek() {
+                return this.queue.length > 0 ? this.queue[0] : null
+            }
+
+            clear() {
+                this.queue = []
+            }
+
+            get size() {
+                return this.queue.length
+            }
+
+        }
+
+        const stack = new Stack()
+        const queue = new Queue()
+
+        function updateStackInput() {
+
+            const method = document.getElementById("stackMethod").value
+            const input = document.getElementById("stackValue")
+
+            if (method === "push") {
+                input.style.display = "inline-block"
+            } else {
+                input.style.display = "none"
+            }
+
+        }
+
+        function updateQueueInput() {
+
+            const method = document.getElementById("queueMethod").value
+            const input = document.getElementById("queueValue")
+
+            if (method === "enqueue") {
+                input.style.display = "inline-block"
+            } else {
+                input.style.display = "none"
+            }
+
+        }
+
+        function runStack() {
+
+            const method = stackMethod.value
+            const value = stackValue.value
+            let result = ""
+
+            if (method === "push") stack.push(value)
+
+            if (method === "pop") result = stack.pop()
+
+            if (method === "peek") result = stack.peek()
+
+            if (method === "clear") stack.clear()
+
+            stackInfo.textContent = result !== "" ? "Result: " + result : ""
+
+            renderStack()
+
+        }
+
+        function runQueue() {
+
+            const method = queueMethod.value
+            const value = queueValue.value
+            let result = ""
+
+            if (method === "enqueue") queue.enqueue(value)
+
+            if (method === "dequeue") result = queue.dequeue()
+
+            if (method === "peek") result = queue.peek()
+
+            if (method === "clear") queue.clear()
+
+            queueInfo.textContent = result !== "" ? "Result: " + result : ""
+
+            renderQueue()
+
+        }
+
+        function renderStack() {
+
+            const view = document.getElementById("stackView")
+
+            view.innerHTML = ""
+
+            for (let i = stack.stack.length - 1; i >= 0; i--) {
+
+                const div = document.createElement("div")
+                div.className = "item"
+                div.textContent = stack.stack[i]
+
+                view.appendChild(div)
+
+            }
+
+        }
+
+        function renderQueue() {
+
+            const view = document.getElementById("queueView")
+
+            view.innerHTML = ""
+
+            for (let val of queue.queue) {
+
+                const div = document.createElement("div")
+                div.className = "item"
+                div.textContent = val
+
+                view.appendChild(div)
+
+            }
+
+        }
+
+        updateStackInput()
+        updateQueueInput()
+
+    </script>
+
+</body>
+
+</html>
