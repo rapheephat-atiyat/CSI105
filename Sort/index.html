@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sorting Playground</title>
+
+    <style>
+        .box {
+            border: 1px solid black;
+            padding: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .result {
+            border-top: 1px solid black;
+            padding-top: 15px;
+        }
+
+        button {
+            padding: 4px 10px;
+        }
+
+        input {
+            padding: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Sorting</h2>
+
+        <div class="box">
+
+            <div class="controls">
+
+                <input id="arrayInput" placeholder="5,20,10,8,7,1,0">
+
+                <select id="method">
+                    <option value="selectionSort">Selection Sort</option>
+                    <option value="insertinoSort">Insertion Sort</option>
+                    <option value="bubbleSort">Bubble Sort</option>
+                    <option value="shellSort">Shell Sort</option>
+                    <option value="mergeSort">Merge Sort</option>
+                    <option value="quickSort">Quick Sort</option>
+                </select>
+
+                <button onclick="runSort()">Sort</button>
+
+                <button onclick="randomData(10)">Random 10</button>
+                <button onclick="randomData(50)">Random 50</button>
+                <button onclick="randomData(1000)">Random 1000</button>
+
+                <button onclick="clearData()">Clear</button>
+
+            </div>
+
+            <div class="result">
+
+                <div>Original: <span id="original"></span></div>
+                <div>Sorted: <span id="sorted"></span></div>
+                <div>Time: <span id="time"></span></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        class Sort {
+            static selectionSort(arr) {
+                for (let i = 0; i < arr.length; i++) {
+                    let min = i
+                    for (let j = i; j < arr.length; j++) {
+                        if (arr[j] < arr[min]) min = j
+                    }
+                    [arr[i], arr[min]] = [arr[min], arr[i]]
+                }
+                return arr
+            }
+
+            static insertinoSort(arr) {
+                for (let i = 1; i < arr.length; i++) {
+                    let key = arr[i]
+                    let j = i - 1
+                    while (j >= 0 && arr[j] > key) {
+                        arr[j + 1] = arr[j]
+                        j--
+                    }
+                    arr[j + 1] = key
+                }
+                return arr
+            }
+
+            static bubbleSort(arr) {
+                for (let i = 0; i < arr.length; i++) {
+                    for (let j = 0; j < arr.length - i - 1; j++) {
+                        if (arr[j] > arr[j + 1]) {
+                            [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
+                        }
+                    }
+                }
+                return arr
+            }
+
+            static shellSort(arr) {
+                let n = arr.length
+                for (let g = Math.floor(n / 2); g > 0; g = Math.floor(g / 2)) {
+                    for (let i = g; i < n; i++) {
+                        let temp = arr[i]
+                        let j = i
+                        while (j >= g && arr[j - g] > temp) {
+                            arr[j] = arr[j - g]
+                            j -= g
+                        }
+                        arr[j] = temp
+                    }
+                }
+                return arr
+            }
+
+            static mergeSort(arr) {
+
+                if (arr.length <= 1) return arr
+
+                const mid = Math.floor(arr.length / 2)
+
+                const left = Sort.mergeSort(arr.slice(0, mid))
+                const right = Sort.mergeSort(arr.slice(mid))
+
+                return Sort.merge(left, right)
+
+            }
+
+            static merge(left, right) {
+
+                let result = []
+                let i = 0
+                let j = 0
+
+                while (i < left.length && j < right.length) {
+
+                    if (left[i] < right[j]) {
+                        result.push(left[i++])
+                    } else {
+                        result.push(right[j++])
+                    }
+
+                }
+
+                return result.concat(left.slice(i)).concat(right.slice(j))
+
+            }
+
+            static quickSort(arr) {
+
+                if (arr.length <= 1) return arr
+
+                const pivot = arr[arr.length - 1]
+
+                const left = []
+                const right = []
+
+                for (let i = 0; i < arr.length - 1; i++) {
+
+                    if (arr[i] < pivot) {
+                        left.push(arr[i])
+                    } else {
+                        right.push(arr[i])
+                    }
+
+                }
+
+                return [...Sort.quickSort(left), pivot, ...Sort.quickSort(right)]
+
+            }
+
+        }
+
+        function runSort() {
+
+            const input = document.getElementById("arrayInput").value
+
+            if (!input) {
+                alert("enter array")
+                return
+            }
+
+            const arr = input.split(",").map(Number)
+
+            const method = document.getElementById("method").value
+
+            const original = [...arr]
+
+
+            const loops = 200
+            let sorted
+
+            const start = performance.now()
+
+            for (let i = 0; i < loops; i++) {
+                sorted = Sort[method]([...arr])
+            }
+
+            const end = performance.now()
+
+            const avg = (end - start) / loops
+
+            document.getElementById("original").textContent = original.join(", ")
+            document.getElementById("sorted").textContent = sorted.join(", ")
+            document.getElementById("time").textContent = avg.toFixed(6) + " ms"
+
+        }
+
+        function randomData(size) {
+
+            let arr = []
+
+            for (let i = 0; i < size; i++) {
+                arr.push(Math.floor(Math.random() * 100))
+            }
+
+            document.getElementById("arrayInput").value = arr.join(",")
+
+        }
+
+        function clearData() {
+
+            document.getElementById("arrayInput").value = ""
+            document.getElementById("original").textContent = ""
+            document.getElementById("sorted").textContent = ""
+            document.getElementById("time").textContent = ""
+
+        }
+
+    </script>
+
+</body>
+
+</html>
