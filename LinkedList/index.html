@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        .listBox {
+            border: 1px solid black;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .controlsRow {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .list {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .node {
+            border: 1px solid black;
+            padding: 6px 12px;
+        }
+
+        .arrow {
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>LinkedList</h2>
+
+        <div class="controls">
+
+            <select id="listName">
+                <option value="USER">USER</option>
+                <option value="ANIMAL">ANIMAL</option>
+                <option value="CARS">CARS</option>
+            </select>
+
+            <button onclick="createList()">Create List</button>
+
+        </div>
+
+        <div id="lists"></div>
+
+    </div>
+
+    <script>
+
+        class ListNode {
+            constructor(data, next = null) {
+                this.data = data
+                this.next = next
+            }
+        }
+
+        class LinkedList {
+
+            constructor(val) {
+                this.head = new ListNode(val)
+            }
+
+            prepend(val) {
+                this.head = new ListNode(val, this.head)
+            }
+
+            append(val) {
+
+                let node = new ListNode(val)
+
+                let cur = this.head
+
+                while (cur.next) {
+                    cur = cur.next
+                }
+
+                cur.next = node
+
+            }
+
+            shift() {
+                if (!this.head) return
+                this.head = this.head.next
+            }
+
+            pop() {
+
+                if (!this.head) return
+
+                if (!this.head.next) {
+                    this.head = null
+                    return
+                }
+
+                let cur = this.head
+
+                while (cur.next.next) {
+                    cur = cur.next
+                }
+
+                cur.next = null
+
+            }
+
+            removeAt(index) {
+
+                if (index == 0) {
+                    this.head = this.head.next
+                    return
+                }
+
+                let cur = this.head
+                let i = 0
+
+                while (cur.next && i < index - 1) {
+                    cur = cur.next
+                    i++
+                }
+
+                if (!cur.next) return
+
+                cur.next = cur.next.next
+
+            }
+
+            reverse() {
+
+                let prev = null
+                let cur = this.head
+
+                while (cur) {
+
+                    let next = cur.next
+                    cur.next = prev
+                    prev = cur
+                    cur = next
+
+                }
+
+                this.head = prev
+
+            }
+
+        }
+
+        const lists = {}
+
+        function createList() {
+
+            const name = document.getElementById("listName").value
+
+            if (lists[name]) {
+                alert("List already exists")
+                return
+            }
+
+            lists[name] = new LinkedList(name)
+
+            renderList(name)
+
+        }
+
+        function renderList(name) {
+
+            const box = document.createElement("div")
+            box.className = "listBox"
+            box.id = "box-" + name
+
+            box.innerHTML = `
+                <b>${name}</b>
+                <div class="controlsRow">
+                    <select class="method" onchange="updateInputs(this)">
+                        <option value="append">append</option>
+                        <option value="prepend">prepend</option>
+                        <option value="shift">shift</option>
+                        <option value="pop">pop</option>
+                        <option value="removeAt">removeAt</option>
+                        <option value="reverse">reverse</option>
+                    </select>
+                    <input class="value" placeholder="value">
+                    <input class="index" placeholder="index" style="display:none">
+                    <button onclick="run('${name}')">Run</button>
+                </div>
+                <div class="list" id="view-${name}"></div>
+            `
+
+            document.getElementById("lists").appendChild(box)
+
+            render(name)
+
+        }
+
+        function updateInputs(select) {
+
+            const box = select.closest(".listBox")
+
+            const indexInput = box.querySelector(".index")
+
+            if (select.value === "removeAt") {
+                indexInput.style.display = "inline-block"
+            } else {
+                indexInput.style.display = "none"
+            }
+
+        }
+
+        function run(name) {
+
+            const box = document.getElementById("box-" + name)
+
+            const method = box.querySelector(".method").value
+            const value = box.querySelector(".value").value
+            const index = parseInt(box.querySelector(".index").value)
+
+            const list = lists[name]
+
+            if (method === "append") list.append(value)
+            if (method === "prepend") list.prepend(value)
+            if (method === "shift") list.shift()
+            if (method === "pop") list.pop()
+            if (method === "removeAt") list.removeAt(index)
+            if (method === "reverse") list.reverse()
+
+            render(name)
+
+        }
+
+        function render(name) {
+
+            const container = document.getElementById("view-" + name)
+
+            container.innerHTML = ""
+
+            let cur = lists[name].head
+
+            while (cur) {
+
+                const node = document.createElement("div")
+                node.className = "node"
+                node.textContent = cur.data
+                container.appendChild(node)
+
+                if (cur.next) {
+                    const arrow = document.createElement("div")
+                    arrow.className = "arrow"
+                    arrow.textContent = "→"
+                    container.appendChild(arrow)
+                }
+                cur = cur.next
+            }
+        }
+    </script>
+</body>
+
+</html>
