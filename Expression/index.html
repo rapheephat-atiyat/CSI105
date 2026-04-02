@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            padding: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            color: #000;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid #555;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 30px;
+            font-size: 16px;
+            background-color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .box {
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 15px;
+            flex: 1;
+            background: #fff;
+        }
+
+        .box-title {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .box-content {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .tree-container {
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 15px;
+            background: #fff;
+            overflow-x: auto;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Expression Tree</h2>
+
+    <div class="row">
+        <input type="text" id="expression" value="(a + b) * (c - d) / (e + f)">
+        <button onclick="build()">Build Tree</button>
+    </div>
+
+    <div class="row">
+        <div class="box">
+            <div class="box-title">Prefix</div>
+            <div class="box-content" id="prefixOutput"></div>
+        </div>
+        <div class="box">
+            <div class="box-title">Postfix</div>
+            <div class="box-content" id="postfixOutput"></div>
+        </div>
+    </div>
+
+    <div class="tree-container">
+        <canvas id="treeCanvas" width="1000" height="500"></canvas>
+    </div>
+
+    <script>
+        class Node {
+            constructor(value) {
+                this.value = value;
+                this.left = null;
+                this.right = null;
+            }
+        }
+
+        const precedence = { '+': 1, '-': 1, '*': 2, '/': 2, '^': 3 };
+
+        function isOperator(c) {
+            return ['+', '-', '*', '/', '^'].includes(c);
+        }
+
+        function tokenize(exp) {
+            return exp.match(/[a-zA-Z0-9]+|[+\-*/^()]/g) || [];
+        }
+
+        function infixToPostfix(tokens) {
+            let output = [];
+            let stack = [];
+
+            for (let t of tokens) {
+                if (/[a-zA-Z0-9]/.test(t)) {
+                    output.push(t);
+                } else if (t === '(') {
+                    stack.push(t);
+                } else if (t === ')') {
+                    while (stack.length && stack[stack.length - 1] !== '(') {
+                        output.push(stack.pop());
+                    }
+                    stack.pop();
+                } else if (isOperator(t)) {
+                    while (stack.length && precedence[stack[stack.length - 1]] >= precedence[t]) {
+                        output.push(stack.pop());
+                    }
+                    stack.push(t);
+                }
+            }
+            while (stack.length) output.push(stack.pop());
+            return output;
+        }
+
+        function constructTree(postfix) {
+            let stack = [];
+            for (let t of postfix) {
+                if (!isOperator(t)) {
+                    stack.push(new Node(t));
+                } else {
+                    let node = new Node(t);
+                    node.right = stack.pop();
+                    node.left = stack.pop();
+                    stack.push(node);
+                }
+            }
+            return stack[0];
+        }
+
+        function getPrefix(node) {
+            if (!node) return [];
+            return [node.value, ...getPrefix(node.left), ...getPrefix(node.right)];
+        }
+
+        function getPostfix(node) {
+            if (!node) return [];
+            return [...getPostfix(node.left), ...getPostfix(node.right), node.value];
+        }
+
+        function drawTreeCanvas(root) {
+            const canvas = document.getElementById('treeCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const radius = 22;
+            const startY = 50;
+
+            function drawEdges(node, x, y, dx, dy) {
+                if (!node) return;
+
+                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = '#000';
+
+                if (node.left) {
+                    const nextX = x - dx;
+                    const nextY = y + dy;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(nextX, nextY);
+                    ctx.stroke();
+                    drawEdges(node.left, nextX, nextY, dx / 1.8, dy);
+                }
+                if (node.right) {
+                    const nextX = x + dx;
+                    const nextY = y + dy;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(nextX, nextY);
+                    ctx.stroke();
+                    drawEdges(node.right, nextX, nextY, dx / 1.8, dy);
+                }
+            }
+
+            function drawNodes(node, x, y, dx, dy) {
+                if (!node) return;
+
+                if (node.left) drawNodes(node.left, x - dx, y + dy, dx / 1.8, dy);
+                if (node.right) drawNodes(node.right, x + dx, y + dy, dx / 1.8, dy);
+
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = '#000';
+                ctx.stroke();
+
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 18px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(node.value, x, y + 2);
+            }
+
+            if (root) {
+                drawEdges(root, canvas.width / 2, startY, 200, 80);
+                drawNodes(root, canvas.width / 2, startY, 200, 80);
+            }
+        }
+
+        function build() {
+            const exp = document.getElementById('expression').value;
+            if (!exp.trim()) return;
+
+            try {
+                const tokens = tokenize(exp);
+                const postfixArr = infixToPostfix(tokens);
+                const root = constructTree(postfixArr);
+
+                document.getElementById('prefixOutput').innerText = getPrefix(root).join(' ');
+                document.getElementById('postfixOutput').innerText = getPostfix(root).join(' ');
+
+                drawTreeCanvas(root);
+            } catch (e) {
+                alert("รูปแบบสมการไม่ถูกต้อง");
+            }
+        }
+
+        build();
+    </script>
+</body>
+
+</html>

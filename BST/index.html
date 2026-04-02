@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            text-align: center;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        .controls {
+            margin-bottom: 15px;
+        }
+
+        input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 120px;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-random {
+            background-color: #2ecc71;
+        }
+
+        .btn-random:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-delete {
+            background-color: #f39c12;
+        }
+
+        .btn-delete:hover {
+            background-color: #d68910;
+        }
+
+        .btn-clear {
+            background-color: #e74c3c;
+        }
+
+        .btn-clear:hover {
+            background-color: #c0392b;
+        }
+
+        .output-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .box {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            min-width: 200px;
+        }
+
+        #searchPath {
+            color: #e67e22;
+            font-weight: bold;
+        }
+
+        canvas {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>BST</h2>
+
+    <div class="controls">
+        <input type="number" id="val" placeholder="ตัวเลข...">
+        <button onclick="insertNode()">Insert</button>
+        <button class="btn-random" onclick="insertRandom()">Random</button>
+        <button class="btn-delete" onclick="deleteNode()">Delete</button>
+        <button class="btn-clear" onclick="clearTree()">Clear</button>
+    </div>
+
+    <div class="controls">
+        <input type="number" id="searchVal" placeholder="ค้นหาตัวเลข...">
+        <button onclick="searchNode()">Search</button>
+    </div>
+
+    <p><b>เส้นทางค้นหา:</b> <span id="searchPath">-</span></p>
+
+    <div class="output-row">
+        <div class="box"><b>Inorder:</b><br><span id="in">-</span></div>
+        <div class="box"><b>Preorder:</b><br><span id="pre">-</span></div>
+        <div class="box"><b>Postorder:</b><br><span id="post">-</span></div>
+    </div>
+
+    <canvas id="c" width="1200" height="600"></canvas>
+
+    <script>
+        class Node {
+            constructor(v) {
+                this.val = v;
+                this.left = null;
+                this.right = null;
+            }
+        }
+
+        let root = null;
+        let target = null;
+
+        function insertRandom() {
+            document.getElementById("val").value = Math.floor(Math.random() * 99) + 1;
+            insertNode();
+        }
+
+        function insertNode() {
+            let v = parseInt(document.getElementById("val").value);
+            if (isNaN(v)) return;
+
+            if (!root) root = new Node(v);
+            else {
+                let cur = root;
+                while (true) {
+                    if (v == cur.val) break;
+                    if (v < cur.val) {
+                        if (!cur.left) { cur.left = new Node(v); break; }
+                        cur = cur.left;
+                    } else {
+                        if (!cur.right) { cur.right = new Node(v); break; }
+                        cur = cur.right;
+                    }
+                }
+            }
+            updateScreen();
+        }
+
+        function deleteNode() {
+            let v = parseInt(document.getElementById("val").value);
+            if (!isNaN(v)) root = removeNode(root, v);
+            updateScreen();
+        }
+
+        function removeNode(node, v) {
+            if (!node) return null;
+            if (v < node.val) node.left = removeNode(node.left, v);
+            else if (v > node.val) node.right = removeNode(node.right, v);
+            else {
+                if (!node.left && !node.right) return null;
+                if (!node.left) return node.right;
+                if (!node.right) return node.left;
+
+                let minNode = node.right;
+                while (minNode.left) minNode = minNode.left;
+                node.val = minNode.val;
+                node.right = removeNode(node.right, minNode.val);
+            }
+            return node;
+        }
+
+        function searchNode() {
+            let v = parseInt(document.getElementById("searchVal").value);
+            if (isNaN(v)) return;
+
+            let cur = root, path = [], found = false;
+            while (cur) {
+                path.push(cur.val);
+                if (v == cur.val) { found = true; break; }
+                if (v < cur.val) cur = cur.left;
+                else cur = cur.right;
+            }
+
+            document.getElementById("searchPath").innerText = path.join(" -> ") + (found ? " (เจอ)" : " (ไม่เจอ)");
+            target = found ? v : null;
+            draw();
+            document.getElementById("searchVal").value = "";
+        }
+
+        function clearTree() {
+            root = null;
+            updateScreen();
+        }
+
+        function inorder(n, arr) { if (n) { inorder(n.left, arr); arr.push(n.val); inorder(n.right, arr); } }
+        function preorder(n, arr) { if (n) { arr.push(n.val); preorder(n.left, arr); preorder(n.right, arr); } }
+        function postorder(n, arr) { if (n) { postorder(n.left, arr); postorder(n.right, arr); arr.push(n.val); } }
+
+        const ctx = document.getElementById("c").getContext("2d");
+
+        function drawLine(n, x, y, dx) {
+            if (!n) return;
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "#7f8c8d";
+            if (n.left) {
+                ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - dx, y + 60); ctx.stroke();
+                drawLine(n.left, x - dx, y + 60, dx / 2);
+            }
+            if (n.right) {
+                ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + 60); ctx.stroke();
+                drawLine(n.right, x + dx, y + 60, dx / 2);
+            }
+        }
+
+        function drawCircle(n, x, y, dx) {
+            if (!n) return;
+            drawCircle(n.left, x - dx, y + 60, dx / 2);
+            drawCircle(n.right, x + dx, y + 60, dx / 2);
+
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fillStyle = (n.val == target) ? "#f1c40f" : "#ffffff";
+            ctx.fill();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = (n.val == target) ? "#e67e22" : "#2c3e50";
+            ctx.stroke();
+
+            ctx.fillStyle = "#2c3e50";
+            ctx.font = "bold 14px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(n.val, x, y);
+        }
+
+        function updateScreen() {
+            target = null;
+            document.getElementById("searchPath").innerText = "-";
+            document.getElementById("val").value = "";
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, 1200, 600);
+            drawLine(root, 600, 40, 300);
+            drawCircle(root, 600, 40, 300);
+
+            let inA = [], preA = [], postA = [];
+            inorder(root, inA);
+            preorder(root, preA);
+            postorder(root, postA);
+
+            document.getElementById("in").innerText = inA.length ? inA.join(" ") : "-";
+            document.getElementById("pre").innerText = preA.length ? preA.join(" ") : "-";
+            document.getElementById("post").innerText = postA.length ? postA.join(" ") : "-";
+        }
+
+        draw();
+    </script>
+</body>
+
+</html>
