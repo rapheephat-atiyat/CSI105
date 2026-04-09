@@ -5,29 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
     <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f9f9f9;
+        }
+
         .box {
             border: 1px solid black;
             padding: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
-        .controls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
+
+        .item {
+            border: 1px solid black;
+            padding: 8px 16px;
         }
 
         .view {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .item {
-            border: 1px solid black;
-            padding: 8px 14px;
         }
     </style>
 </head>
@@ -35,231 +34,216 @@
 <body>
 
     <div class="container">
-
-        <h2>Stack & Queue</h2>
-
-        <!-- STACK -->
+        <h2>Stack | Queue</h2>
 
         <div class="box">
-
-            <h3>Stack (LIFO)</h3>
-
             <div class="controls">
-
-                <select id="stackMethod" onchange="updateStackInput()">
-                    <option value="push">push</option>
-                    <option value="pop">pop</option>
-                    <option value="peek">peek</option>
-                    <option value="clear">clear</option>
+                <select id="actionSelect" onchange="checkInputType()">
+                    <option value="add">Add</option>
+                    <option value="remove">Remove</option>
+                    <option value="peek">Peek</option>
+                    <option value="clear">Clear</option>
                 </select>
 
-                <input id="stackValue" placeholder="value">
+                <input type="text" id="valueInput" placeholder="Enter value">
 
-                <button onclick="runStack()">Run</button>
+                <button onclick="runAction()">Run</button>
 
-                <span id="stackInfo"></span>
-
+                <strong id="infoDisplay" style="color: red;"></strong>
             </div>
-
-            <div class="view" id="stackView"></div>
-
         </div>
 
+        <div class="box">
+            <h3>Stack (LIFO)</h3>
+            <div class="view" id="stackDisplay"></div>
+        </div>
 
         <div class="box">
-
             <h3>Queue (FIFO)</h3>
-
-            <div class="controls">
-
-                <select id="queueMethod" onchange="updateQueueInput()">
-                    <option value="enqueue">enqueue</option>
-                    <option value="dequeue">dequeue</option>
-                    <option value="peek">peek</option>
-                    <option value="clear">clear</option>
-                </select>
-
-                <input id="queueValue" placeholder="value">
-
-                <button onclick="runQueue()">Run</button>
-
-                <span id="queueInfo"></span>
-
-            </div>
-
-            <div class="view" id="queueView"></div>
-
+            <div class="view" id="queueDisplay"></div>
         </div>
 
     </div>
 
     <script>
+        class Node {
+            constructor(data) {
+                this.data = data;
+                this.next = null;
+            }
+        }
 
         class Stack {
             constructor() {
-                this.stack = []
+                this.top = null;
             }
 
-            push(val) {
-                this.stack.push(val)
+            push(value) {
+                let newNode = new Node(value);
+                newNode.next = this.top;
+                this.top = newNode;
             }
 
             pop() {
-                return this.stack.pop()
+                if (this.top === null) {
+                    return "Empty";
+                }
+
+                let valueToReturn = this.top.data;
+                this.top = this.top.next;
+
+                return valueToReturn;
             }
 
             peek() {
-                return this.stack.length > 0 ? this.stack[this.stack.length - 1] : null
+                if (this.top === null) {
+                    return "Empty";
+                }
+                return this.top.data;
             }
 
             clear() {
-                this.stack = []
+                this.top = null;
             }
-
-            get size() {
-                return this.stack.length
-            }
-
         }
 
         class Queue {
-
             constructor() {
-                this.queue = []
+                this.head = null;
+                this.tail = null;
             }
 
-            enqueue(val) {
-                this.queue.push(val)
+            enqueue(value) {
+                let newNode = new Node(value);
+
+                if (this.head === null) {
+                    this.head = newNode;
+                    this.tail = newNode;
+                } else {
+                    this.tail.next = newNode;
+                    this.tail = newNode;
+                }
             }
 
             dequeue() {
-                return this.queue.shift()
+                if (this.head === null) {
+                    return "Empty";
+                }
+
+                let valueToReturn = this.head.data;
+                this.head = this.head.next;
+
+                if (this.head === null) {
+                    this.tail = null;
+                }
+
+                return valueToReturn;
             }
 
             peek() {
-                return this.queue.length > 0 ? this.queue[0] : null
+                if (this.head === null) {
+                    return "Empty";
+                }
+                return this.head.data;
             }
 
             clear() {
-                this.queue = []
+                this.head = null;
+                this.tail = null;
             }
-
-            get size() {
-                return this.queue.length
-            }
-
         }
 
-        const stack = new Stack()
-        const queue = new Queue()
+        let myStack = new Stack();
+        let myQueue = new Queue();
 
-        function updateStackInput() {
+        function checkInputType() {
+            let action = document.getElementById("actionSelect").value;
+            let inputField = document.getElementById("valueInput");
 
-            const method = document.getElementById("stackMethod").value
-            const input = document.getElementById("stackValue")
-
-            if (method === "push") {
-                input.style.display = "inline-block"
+            if (action === "add") {
+                inputField.style.display = "inline-block";
             } else {
-                input.style.display = "none"
+                inputField.style.display = "none";
+                inputField.value = "";
             }
-
         }
 
-        function updateQueueInput() {
+        function runAction() {
+            let action = document.getElementById("actionSelect").value;
+            let inputValue = document.getElementById("valueInput").value;
+            let infoDisplay = document.getElementById("infoDisplay");
 
-            const method = document.getElementById("queueMethod").value
-            const input = document.getElementById("queueValue")
+            let stackResult = "";
+            let queueResult = "";
 
-            if (method === "enqueue") {
-                input.style.display = "inline-block"
+            if (action === "add") {
+                if (inputValue !== "") {
+                    myStack.push(inputValue);
+                    myQueue.enqueue(inputValue);
+                    document.getElementById("valueInput").value = "";
+                }
+            }
+
+            if (action === "remove") {
+                stackResult = myStack.pop();
+                queueResult = myQueue.dequeue();
+            }
+
+            if (action === "peek") {
+                stackResult = myStack.peek();
+                queueResult = myQueue.peek();
+            }
+
+            if (action === "clear") {
+                myStack.clear();
+                myQueue.clear();
+            }
+
+            if (stackResult !== "" || queueResult !== "") {
+                infoDisplay.innerHTML = "Stack: " + stackResult + " | Queue: " + queueResult;
             } else {
-                input.style.display = "none"
+                infoDisplay.innerHTML = "";
             }
 
+            drawStack();
+            drawQueue();
         }
 
-        function runStack() {
+        function drawStack() {
+            let displayArea = document.getElementById("stackDisplay");
+            displayArea.innerHTML = "";
 
-            const method = stackMethod.value
-            const value = stackValue.value
-            let result = ""
+            let currentNode = myStack.top;
 
-            if (method === "push") stack.push(value)
+            while (currentNode !== null) {
+                let box = document.createElement("div");
+                box.className = "item";
+                box.innerHTML = currentNode.data;
+                displayArea.appendChild(box);
 
-            if (method === "pop") result = stack.pop()
-
-            if (method === "peek") result = stack.peek()
-
-            if (method === "clear") stack.clear()
-
-            stackInfo.textContent = result !== "" ? "Result: " + result : ""
-
-            renderStack()
-
-        }
-
-        function runQueue() {
-
-            const method = queueMethod.value
-            const value = queueValue.value
-            let result = ""
-
-            if (method === "enqueue") queue.enqueue(value)
-
-            if (method === "dequeue") result = queue.dequeue()
-
-            if (method === "peek") result = queue.peek()
-
-            if (method === "clear") queue.clear()
-
-            queueInfo.textContent = result !== "" ? "Result: " + result : ""
-
-            renderQueue()
-
-        }
-
-        function renderStack() {
-
-            const view = document.getElementById("stackView")
-
-            view.innerHTML = ""
-
-            for (let i = stack.stack.length - 1; i >= 0; i--) {
-
-                const div = document.createElement("div")
-                div.className = "item"
-                div.textContent = stack.stack[i]
-
-                view.appendChild(div)
-
+                currentNode = currentNode.next;
             }
-
         }
 
-        function renderQueue() {
+        function drawQueue() {
+            let displayArea = document.getElementById("queueDisplay");
+            displayArea.innerHTML = "";
 
-            const view = document.getElementById("queueView")
+            let currentNode = myQueue.head;
 
-            view.innerHTML = ""
+            while (currentNode !== null) {
+                let box = document.createElement("div");
+                box.className = "item";
+                box.innerHTML = currentNode.data;
+                displayArea.appendChild(box);
 
-            for (let val of queue.queue) {
-
-                const div = document.createElement("div")
-                div.className = "item"
-                div.textContent = val
-
-                view.appendChild(div)
-
+                currentNode = currentNode.next;
             }
-
         }
 
-        updateStackInput()
-        updateQueueInput()
+        checkInputType();
 
     </script>
-
 </body>
 
 </html>
