@@ -1,27 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>LinkedList</title>
 
     <style>
-        .controls {
-            margin-bottom: 20px;
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f9;
         }
 
-        .listBox {
-            border: 1px solid black;
-            padding: 15px;
-            margin-bottom: 20px;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
 
         .controlsRow {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             margin-top: 10px;
+            align-items: center;
         }
 
         .list {
@@ -29,16 +38,18 @@
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin-top: 15px;
+            min-height: 40px;
         }
 
         .node {
             border: 1px solid black;
-            padding: 6px 12px;
+            padding: 8px 16px;
         }
 
         .arrow {
-            font-size: 18px;
+            font-size: 20px;
+            color: black;
         }
     </style>
 </head>
@@ -47,214 +58,272 @@
 
     <div class="container">
 
-        <h2>LinkedList</h2>
+        <h2>Linked List</h2>
 
         <div class="controls">
-
             <select id="listName">
                 <option value="USER">USER</option>
                 <option value="ANIMAL">ANIMAL</option>
                 <option value="CARS">CARS</option>
             </select>
-
             <button onclick="createList()">Create List</button>
-
         </div>
 
-        <div id="lists"></div>
+        <div id="listsArea"></div>
 
     </div>
 
     <script>
 
-        class ListNode {
-            constructor(data, next = null) {
-                this.data = data
-                this.next = next
+        class Node {
+            constructor(data) {
+                this.data = data;
+                this.next = null;
             }
         }
 
         class LinkedList {
-
             constructor() {
-                // เปลี่ยนเป็น null เพื่อไม่ให้สร้าง Node อัตโนมัติ
-                this.head = null
+                this.head = null;
             }
 
-            prepend(val) {
-                this.head = new ListNode(val, this.head)
+            prepend(value) {
+                let newNode = new Node(value);
+                newNode.next = this.head;
+                this.head = newNode;
             }
 
-            append(val) {
-                let node = new ListNode(val)
+            append(value) {
+                let newNode = new Node(value);
 
-                // เพิ่มการเช็คว่าถ้ายังไม่มี head ให้กำหนดเป็น head ได้เลย
-                if (!this.head) {
-                    this.head = node
-                    return
+                if (this.head === null) {
+                    this.head = newNode;
+                    return;
                 }
 
-                let cur = this.head
+                let currentNode = this.head;
+                while (currentNode.next !== null) {
+                    currentNode = currentNode.next;
+                }
+                currentNode.next = newNode;
+            }
 
-                while (cur.next) {
-                    cur = cur.next
+            insertAt(index, value) {
+                if (index === 0) {
+                    this.prepend(value);
+                    return;
                 }
 
-                cur.next = node
+                let newNode = new Node(value);
+                let currentNode = this.head;
+                let currentIndex = 0;
+
+                while (currentNode !== null && currentIndex < index - 1) {
+                    currentNode = currentNode.next;
+                    currentIndex++;
+                }
+
+                if (currentNode === null) {
+                    return;
+                }
+
+                newNode.next = currentNode.next;
+                currentNode.next = newNode;
             }
 
             shift() {
-                if (!this.head) return
-                this.head = this.head.next
+                if (this.head === null) {
+                    return;
+                }
+                this.head = this.head.next;
             }
 
             pop() {
-                if (!this.head) return
-
-                if (!this.head.next) {
-                    this.head = null
-                    return
+                if (this.head === null) {
+                    return;
                 }
 
-                let cur = this.head
-
-                while (cur.next.next) {
-                    cur = cur.next
+                if (this.head.next === null) {
+                    this.head = null;
+                    return;
                 }
 
-                cur.next = null
+                let currentNode = this.head;
+                while (currentNode.next.next !== null) {
+                    currentNode = currentNode.next;
+                }
+                currentNode.next = null;
             }
 
             removeAt(index) {
-                // ป้องกัน Error กรณีสั่งลบทั้งที่ List ยังว่าง
-                if (!this.head) return
-
-                if (index == 0) {
-                    this.head = this.head.next
-                    return
+                if (this.head === null) {
+                    return;
                 }
 
-                let cur = this.head
-                let i = 0
-
-                while (cur.next && i < index - 1) {
-                    cur = cur.next
-                    i++
+                if (index === 0) {
+                    this.head = this.head.next;
+                    return;
                 }
 
-                if (!cur.next) return
+                let currentNode = this.head;
+                let currentIndex = 0;
 
-                cur.next = cur.next.next
+                while (currentNode.next !== null && currentIndex < index - 1) {
+                    currentNode = currentNode.next;
+                    currentIndex++;
+                }
+
+                if (currentNode.next === null) {
+                    return;
+                }
+
+                currentNode.next = currentNode.next.next;
             }
 
             reverse() {
-                let prev = null
-                let cur = this.head
+                let previousNode = null;
+                let currentNode = this.head;
+                let nextNode = null;
 
-                while (cur) {
-                    let next = cur.next
-                    cur.next = prev
-                    prev = cur
-                    cur = next
+                while (currentNode !== null) {
+                    nextNode = currentNode.next;
+                    currentNode.next = previousNode;
+                    previousNode = currentNode;
+                    currentNode = nextNode;
                 }
-
-                this.head = prev
+                this.head = previousNode;
             }
 
+            clear() {
+                this.head = null;
+            }
         }
 
-        const lists = {}
+        const lists = {};
 
         function createList() {
-            const name = document.getElementById("listName").value
+            let name = document.getElementById("listName").value;
 
-            if (lists[name]) {
-                alert("List already exists")
-                return
+            if (lists[name] !== undefined) {
+                alert("List นี้ถูกสร้างไว้แล้ว!");
+                return;
             }
 
-            // ไม่ต้องส่งค่า name เข้าไปใน constructor แล้ว
-            lists[name] = new LinkedList()
-
-            renderList(name)
+            lists[name] = new LinkedList();
+            drawListUI(name);
         }
 
-        function renderList(name) {
-            const box = document.createElement("div")
-            box.className = "listBox"
-            box.id = "box-" + name
+        function drawListUI(name) {
+            let box = document.createElement("div");
+            box.className = "listBox";
+            box.id = "box-" + name;
 
             box.innerHTML = `
-                <b>${name}</b>
+                <h3>${name}</h3>
                 <div class="controlsRow">
-                    <select class="method" onchange="updateInputs(this)">
-                        <option value="append">append</option>
-                        <option value="prepend">prepend</option>
-                        <option value="shift">shift</option>
-                        <option value="pop">pop</option>
-                        <option value="removeAt">removeAt</option>
-                        <option value="reverse">reverse</option>
+                    <select class="methodSelect" onchange="updateInputVisibility(this)">
+                        <option value="append">Append</option>
+                        <option value="prepend">Prepend</option>
+                        <option value="insertAt">InsertAt</option>
+                        <option value="shift">Shift</option>
+                        <option value="pop">Pop</option>
+                        <option value="removeAt">RemoveAt</option>
+                        <option value="reverse">Reverse</option>
+                        <option value="clear">Clear</option>
                     </select>
-                    <input class="value" placeholder="value">
-                    <input class="index" placeholder="index" style="display:none">
-                    <button onclick="run('${name}')">Run</button>
+                    
+                    <input type="text" class="valueInput">
+                    <input type="number" class="indexInput" style="display:none; width: 140px;">
+                    
+                    <button onclick="runMethod('${name}')">Run</button>
                 </div>
                 <div class="list" id="view-${name}"></div>
-            `
+            `;
 
-            document.getElementById("lists").appendChild(box)
-            render(name)
+            document.getElementById("listsArea").appendChild(box);
+            updateListDisplay(name);
         }
 
-        function updateInputs(select) {
-            const box = select.closest(".listBox")
-            const indexInput = box.querySelector(".index")
+        function updateInputVisibility(selectElement) {
+            let box = selectElement.closest(".listBox");
+            let valueInput = box.querySelector(".valueInput");
+            let indexInput = box.querySelector(".indexInput");
+            let method = selectElement.value;
 
-            if (select.value === "removeAt") {
-                indexInput.style.display = "inline-block"
-            } else {
-                indexInput.style.display = "none"
+            valueInput.style.display = "none";
+            indexInput.style.display = "none";
+
+            if (method === "append" || method === "prepend") {
+                valueInput.style.display = "inline-block";
+            }
+            else if (method === "removeAt") {
+                indexInput.style.display = "inline-block";
+            }
+            else if (method === "insertAt") {
+                valueInput.style.display = "inline-block";
+                indexInput.style.display = "inline-block";
             }
         }
 
-        function run(name) {
-            const box = document.getElementById("box-" + name)
+        function runMethod(name) {
+            let box = document.getElementById("box-" + name);
+            let method = box.querySelector(".methodSelect").value;
+            let value = box.querySelector(".valueInput").value;
+            let index = parseInt(box.querySelector(".indexInput").value);
 
-            const method = box.querySelector(".method").value
-            const value = box.querySelector(".value").value
-            const index = parseInt(box.querySelector(".index").value)
+            let myList = lists[name];
 
-            const list = lists[name]
+            if (method === "append") {
+                if (value !== "") myList.append(value);
+            }
+            if (method === "prepend") {
+                if (value !== "") myList.prepend(value);
+            }
+            if (method === "insertAt") {
+                if (value !== "" && !isNaN(index)) myList.insertAt(index, value);
+            }
+            if (method === "shift") {
+                myList.shift();
+            }
+            if (method === "pop") {
+                myList.pop();
+            }
+            if (method === "removeAt") {
+                if (!isNaN(index)) myList.removeAt(index);
+            }
+            if (method === "reverse") {
+                myList.reverse();
+            }
+            if (method === "clear") {
+                myList.clear();
+            }
 
-            if (method === "append") list.append(value)
-            if (method === "prepend") list.prepend(value)
-            if (method === "shift") list.shift()
-            if (method === "pop") list.pop()
-            if (method === "removeAt") list.removeAt(index)
-            if (method === "reverse") list.reverse()
+            box.querySelector(".valueInput").value = "";
+            box.querySelector(".indexInput").value = "";
 
-            render(name)
+            updateListDisplay(name);
         }
 
-        function render(name) {
-            const container = document.getElementById("view-" + name)
-            container.innerHTML = ""
+        function updateListDisplay(name) {
+            let displayArea = document.getElementById("view-" + name);
+            displayArea.innerHTML = "";
 
-            let cur = lists[name].head
+            let currentNode = lists[name].head;
 
-            while (cur) {
-                const node = document.createElement("div")
-                node.className = "node"
-                node.textContent = cur.data
-                container.appendChild(node)
+            while (currentNode !== null) {
+                let nodeElement = document.createElement("div");
+                nodeElement.className = "node";
+                nodeElement.innerHTML = currentNode.data;
+                displayArea.appendChild(nodeElement);
 
-                if (cur.next) {
-                    const arrow = document.createElement("div")
-                    arrow.className = "arrow"
-                    arrow.textContent = "→"
-                    container.appendChild(arrow)
+                if (currentNode.next !== null) {
+                    let arrowElement = document.createElement("div");
+                    arrowElement.className = "arrow";
+                    arrowElement.innerHTML = "→";
+                    displayArea.appendChild(arrowElement);
                 }
-                cur = cur.next
+
+                currentNode = currentNode.next;
             }
         }
     </script>
