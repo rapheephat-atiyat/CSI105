@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin-top: 100px;
+            display: flex;
+            justify-content: center;
+        }
+        .bbb {
+            background-color: rgb(189, 241, 241);
+            padding: 16px 20px;
+            border: 1px solid rgb(255, 255, 255);
+            border-radius: 10px;
+        }
+        #ex {
+            padding: 10px 15px;
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Expression</h1>
+        <input type="text" id="ex">
+        <button class="bbb" type="button" onclick="cal()">run</button>
+
+        <div id="output"></div>
+        <div>
+            <h5>Without Space</h5>
+            <div id="withoutspace">-</div>
+        </div>
+        <div>
+            <h5>Operator</h5>
+            <div id="Operator">-</div>
+        </div>
+        <div>
+            <h5>Infix</h5>
+            <div id="Infix">-</div>
+        </div>
+        <div>
+            <h5>Postfix</h5>
+            <div id="Postfix">-</div>
+        </div>
+        <div>
+            <h5>Prefix</h5>
+            <div id="Prefix">-</div>
+        </div>
+    </div>
+    <script>
+        class Node {
+            constructor(value) {
+                this.value = value;
+                this.left = null;
+                this.right = null;
+            }
+        }
+        
+        const precedence = { '+': 1, '-': 1, '*': 2, '/': 2, '^': 3 };
+        
+        function isOper(ch) {
+            return ['+', '-', '*', '/', '^'].includes(ch)
+        }
+        
+        function ff(tokens) {
+            const output = [];
+            const stack = [];
+            for (let v of tokens) {
+                if(/[a-zA-Zก-ฮ0-9]/.test(v)) {
+                    output.push(v)
+                } else if(v === '(') {
+                    stack.push(v)
+                } else if(v === ')') {
+                    while (stack.length && stack[stack.length - 1] !== '(') {
+                        output.push(stack.pop());
+                    }
+                    stack.pop();
+                } else if (isOper(v)) {
+                    while (stack.length && precedence[stack[stack.length - 1]] >= precedence[v]) {
+                        output.push(stack.pop());
+                    }
+                    stack.push(v);
+                }
+            }
+            while (stack.length) output.push(stack.pop());
+            return output;
+        }
+        
+        function isTokens(exp) {
+            return exp.match(/[a-zA-Zก-ฮ0-9]+|[+\-*/^()]/g) || [];
+        }
+
+        function Tree(pfix) {
+            const stack = [];
+            for (let v of pfix) {
+                if (!isOper(v)) {
+                    stack.push(new Node(v));
+                } else {
+                    let node = new Node(v);
+                    node.right = stack.pop();
+                    node.left = stack.pop();
+                    stack.push(node);
+                }
+            }
+            return stack[0];
+        }
+
+        function getOperators(tokens) {
+            const output = [];
+            for (v of tokens) {
+                if(isOper(v)) output.push(v)
+            }
+            return output;
+        }
+
+        function Infix(node) {
+            if (!node) return "";
+            
+            if (!node.left && !node.right) {
+                return node.value;
+            }
+        
+            return Infix(node.left) + " , " + node.value + " , " + Infix(node.right);
+        }
+
+        function PreFix(node) {
+            if(!node) return "";
+            return node.value + " , " + PreFix(node.left) + PreFix(node.right);
+        }
+
+        function cal() {
+            const withoutspaceE = document.getElementById("withoutspace");
+            const OperatorE = document.getElementById("Operator");
+            const InfixE = document.getElementById("Infix");
+            const PostfixE = document.getElementById("Postfix");
+            const PrefixE = document.getElementById("Prefix");
+            const ex = document.getElementById("ex");
+            const tokens = isTokens(ex.value);
+            console.log(tokens)
+            const postFix = ff(tokens);
+            console.log(postFix)
+            const operators = getOperators(tokens);
+            console.log(operators)
+
+            const tree = Tree(postFix);
+            const infix = Infix(tree)
+            const prefix = PreFix(tree)
+            console.log(infix)
+            console.log(prefix)
+            console.log(postFix)
+            OperatorE.innerHTML = operators.join(" , ")
+            withoutspaceE.innerHTML = tokens.join(" , ")
+            InfixE.innerHTML = infix
+            PrefixE.innerHTML = prefix
+            PostfixE.innerHTML = postFix.join(" , ")
+        }
+    </script>
+</body>
+</html>
