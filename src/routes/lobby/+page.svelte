@@ -99,6 +99,25 @@
 		showManualJoinModal = true;
 	}
 
+	function handleQuickMatch() {
+		const availableRooms = rooms.filter((r) => !r.isPrivate && r.players < r.maxPlayers && r.status === 'waiting');
+		if (availableRooms.length > 0) {
+			const randomRoom = availableRooms[Math.floor(Math.random() * availableRooms.length)];
+			handleJoinClick(randomRoom.joinCode, false);
+		} else {
+			Swal.fire({
+				icon: 'info',
+				title: 'ไม่พบห้องที่ว่าง',
+				text: 'ขณะนี้ไม่มีห้องสาธารณะที่ว่างอยู่ คุณสามารถสร้างห้องใหม่ได้เลย',
+				background: '#0a0a0a',
+				color: '#fff',
+				confirmButtonColor: '#3b82f6'
+			}).then(() => {
+				handleCreateClick();
+			});
+		}
+	}
+
 	function handleJoinClick(rCode: string, isPrivate: boolean = false) {
 		guestJoinCode = rCode;
 		if (isPrivate) {
@@ -244,8 +263,8 @@
 
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
 		<div class="flex flex-col gap-10 lg:col-span-8">
-			<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-				<ActionCard title="แข่งขันด่วน" description="เข้าร่วมการแข่งขันทันที" colorClass="blue" onClick={() => {}}>
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
+				<ActionCard title="แข่งขันด่วน" description="เข้าร่วมการแข่งขันทันที" colorClass="blue" onClick={handleQuickMatch}>
 					{#snippet icon()}<Play size={24} fill="currentColor" class="ml-1" />{/snippet}
 				</ActionCard>
 

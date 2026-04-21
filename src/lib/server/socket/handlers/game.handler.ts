@@ -15,6 +15,14 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
         });
 
         if (room && room.hostPlayerId === playerId) {
+            const participants = await db.query.roomParticipants.findMany({
+                where: eq(roomParticipants.roomId, roomId)
+            });
+            const allReady = participants.every(p => p.isReady);
+            if (!allReady) {
+                return socket.emit("error", "ผู้เล่นทุกคนยังไม่พร้อม");
+            }
+
             await db.update(gameRooms).set({ status: "playing" }).where(eq(gameRooms.id, roomId));
 
             const game = createGame(roomId, algo, difficulty);

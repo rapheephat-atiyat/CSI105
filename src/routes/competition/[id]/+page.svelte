@@ -123,14 +123,15 @@
 			<div class="flex max-h-[85vh] flex-col gap-6 lg:col-span-4">
 				<div class="group relative overflow-hidden rounded-3xl border border-white/10 bg-neutral-950/40 shadow-xl backdrop-blur-md">
 					<div class="flex items-center border-b border-white/5 bg-white/2 px-4 py-3 md:px-5">
-						<div class="flex gap-2">
+						<div class="flex flex-1 gap-2">
 							<span class="h-2.5 w-2.5 rounded-full bg-red-500/50"></span>
 							<span class="h-2.5 w-2.5 rounded-full bg-yellow-500/50"></span>
 							<span class="h-2.5 w-2.5 rounded-full bg-green-500/50"></span>
 						</div>
-						<div class="mx-auto flex items-center gap-1.5 font-mono text-[10px] text-zinc-500 uppercase">
+						<div class="flex flex-1 items-center justify-center gap-1.5 font-mono text-[10px] text-zinc-500 uppercase">
 							<Cpu size={12} /> ข้อมูลห้อง.sys
 						</div>
+						<div class="flex flex-1"></div>
 					</div>
 
 					<div class="p-6 md:p-8">
@@ -191,9 +192,9 @@
 				</div>
 			</div>
 
-			<div class="flex h-full flex-col gap-6 lg:col-span-8">
+			<div class="flex h-full max-h-[85vh] flex-col gap-6 lg:col-span-8">
 				<div class="relative flex flex-1 flex-col overflow-hidden rounded-[2.5rem] border border-white/10 bg-neutral-950/40 shadow-xl backdrop-blur-md">
-					<div class="flex items-center border-b border-white/5 bg-white/2 px-6 py-4 md:px-10 md:py-6">
+					<div class="flex shrink-0 items-center border-b border-white/5 bg-white/2 px-6 py-4 md:px-10 md:py-6">
 						<div class="mr-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-500/20 bg-blue-500/10">
 							<Cpu class="h-6 w-6 text-blue-400" />
 						</div>
@@ -202,7 +203,7 @@
 							<p class="font-mono text-[10px] tracking-widest text-zinc-500 uppercase">เลือกอัลกอริทึมที่จะใช้งาน</p>
 						</div>
 					</div>
-					<div class="relative z-10 grid gap-4 p-6 sm:grid-cols-2 lg:p-10">
+					<div class="custom-scrollbar relative z-10 grid flex-1 gap-4 overflow-y-auto p-6 sm:grid-cols-2 lg:p-10">
 						{#each algorithms as algo, i}
 							<button class="group relative flex flex-col overflow-hidden rounded-2xl border p-6 text-left transition-all duration-300 {selectedAlgoIndex === i ? 'border-blue-500/50 bg-blue-500/10' : 'border-white/5 bg-black/20 hover:border-white/20'}" onclick={() => selectAlgo(i)} disabled={!isHost}>
 								{#if selectedAlgoIndex === i}
@@ -223,7 +224,7 @@
 						{/each}
 					</div>
 
-					<div class="mt-auto flex flex-col items-center justify-between gap-4 border-t border-white/5 bg-white/2 p-6 sm:flex-row lg:p-10">
+					<div class="mt-auto flex shrink-0 flex-col items-center justify-between gap-4 border-t border-white/5 bg-white/2 p-6 sm:flex-row lg:p-10">
 						<div class="flex items-center gap-3">
 							<div class="h-2 w-2 rounded-full {isHost ? 'bg-green-500' : 'bg-yellow-500'} animate-pulse"></div>
 							<p class="text-[10px] font-black tracking-widest text-zinc-400 uppercase">
@@ -236,7 +237,7 @@
 								{players.find((p) => p.playerId === data.user?.id)?.isReady ? 'ยกเลิกพร้อม' : 'กดยืนยันความพร้อม'}
 							</button>
 							{#if isHost}
-								<button class="flex-1 rounded-2xl bg-blue-600 px-10 py-4 text-sm font-black text-white uppercase shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all hover:bg-blue-500 hover:shadow-[0_0_40px_rgba(37,99,235,0.6)] active:scale-95 disabled:opacity-50 sm:flex-none" onclick={startGame}> เริ่มการแข่งขัน </button>
+								<button class="flex-1 rounded-2xl bg-blue-600 px-10 py-4 text-sm font-black text-white uppercase shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all hover:bg-blue-500 hover:shadow-[0_0_40px_rgba(37,99,235,0.6)] active:scale-95 disabled:opacity-50 sm:flex-none" onclick={startGame} disabled={!players.every((p) => p.isReady)}> เริ่มการแข่งขัน </button>
 							{/if}
 						</div>
 					</div>

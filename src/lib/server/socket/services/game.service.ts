@@ -73,8 +73,9 @@ export function handleMove(socket: TypedSocket, indexA: number, indexB: number, 
             const timeTakenSec = Math.floor(timeTakenMs / 1000);
             const timeLeft = Math.max(0, 60 - timeTakenSec - playerState.timePenalty);
 
-            const rankBonus = Math.max(0, ((game as any).totalPlayers - game.playersFinished) * 100);
-            const roundScore = (timeLeft * 10) + rankBonus;
+            const rankBonus = Math.max(0, ((game as any).totalPlayers - game.playersFinished) * 3);
+            const timeBonus = Math.floor(timeLeft / 20);
+            const roundScore = 5 + rankBonus + timeBonus;
 
             playerState.score += roundScore;
 
@@ -138,7 +139,6 @@ async function checkRoundEnd(game: GameState, roomId: string, rCode: string, io:
     const totalPlayers = (game as any).totalPlayers || 1;
     if (game.playersFinished >= totalPlayers) {
         if (game.currentRound < game.maxRounds) {
-            // Wait 5 seconds then start next round
             setTimeout(() => {
                 startNextRound(game, rCode, io);
             }, 5000);

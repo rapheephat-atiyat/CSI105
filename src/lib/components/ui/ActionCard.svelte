@@ -50,16 +50,16 @@
 
 <button
 	onclick={onClick}
-	class="group relative flex flex-col items-start gap-4 overflow-hidden rounded-3xl border sm:rounded-4xl {config.cardBorder} {config.cardBg}
-        p-6 text-left transition-all duration-300 hover:-translate-y-1 sm:p-8
+	class="group relative flex h-full w-full items-center justify-start gap-4 overflow-hidden rounded-2xl border sm:rounded-3xl {config.cardBorder} {config.cardBg}
+        p-4 text-left transition-all duration-300 hover:-translate-y-1 sm:p-5
         {config.hoverBorder} {config.hoverBg} {config.hoverShadow} opacity-90 hover:opacity-100"
 >
 	<div class="absolute -top-10 -right-10 h-32 w-32 rounded-full blur-3xl transition-all duration-300 {config.glow}"></div>
-	<div class="relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl border shadow-inner transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 {config.iconBox}">
+	<div class="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border shadow-inner transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 {config.iconBox}">
 		{@render icon()}
 	</div>
-	<div class="relative z-10 mt-2">
-		<h3 class="text-lg font-bold text-white sm:text-xl">{title}</h3>
-		<p class="text-xs text-zinc-400/80 sm:text-sm">{description}</p>
+	<div class="relative z-10 flex flex-1 flex-col">
+		<h3 class="text-base font-bold text-white sm:text-lg">{title}</h3>
+		<p class="mt-0.5 text-[11px] leading-relaxed text-zinc-400/80 sm:text-xs">{description}</p>
 	</div>
 </button>
