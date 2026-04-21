@@ -11,6 +11,7 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import Swal from 'sweetalert2';
+	import { PUBLIC_APP_NAME } from '$env/static/public';
 
 	interface Room {
 		id: string;
@@ -242,6 +243,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>แข่งขัน - {PUBLIC_APP_NAME}</title>
+</svelte:head>
+
 <div class="relative z-10 mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:py-24">
 	<div class="mb-10 flex flex-col justify-between gap-6 sm:mb-14 md:flex-row md:items-end">
 		<div>
@@ -367,7 +372,7 @@
 											{index + 1}
 										</div>
 										<div class="relative">
-											<img src={player.image ?? `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.name}`} alt={player.name} class="h-10 w-10 rounded-full object-cover shadow-md ring-2 ring-white/10 transition-all group-hover:ring-white/30" />
+											<img src={player.image ?? `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.id}`} alt={player.name} class="h-10 w-10 rounded-full object-cover shadow-md ring-2 ring-white/10 transition-all group-hover:ring-white/30" />
 											{#if index === 0}
 												<div class="absolute -top-1.5 -right-1.5 flex h-5.5 w-5.5 items-center justify-center rounded-full bg-linear-to-tr from-amber-300 to-amber-500 shadow-sm ring-[2.5px] ring-neutral-900">
 													<Crown size={13} class="text-amber-950" strokeWidth={2.5} />
@@ -449,8 +454,6 @@
 				]}
 			/>
 		</div>
-
-		<Select label="อัลกอริทึม (Algorithm)" bind:value={createRoomAlgo} flavor="indigo" options={algorithms.map((a) => ({ value: a, label: a }))} />
 
 		<div class="mt-1 flex flex-col gap-2 rounded-xl border border-white/10 bg-white/5 p-4">
 			<Checkbox label="ตั้งเป็นห้องส่วนตัว (Private Room)" bind:checked={createRoomPrivate} flavor="indigo" />

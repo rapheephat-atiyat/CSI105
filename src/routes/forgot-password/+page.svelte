@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { Loader2, Mail, KeyRound, ArrowLeft } from 'lucide-svelte';
 	import Swal from 'sweetalert2';
+	import { PUBLIC_APP_NAME } from '$env/static/public';
 
 	let email = $state('');
 	let isLoading = $state(false);
@@ -44,10 +45,8 @@
 </script>
 
 <svelte:head>
-	<title>ลืมรหัสผ่าน</title>
+	<title>ลืมรหัสผ่าน - {PUBLIC_APP_NAME}</title>
 </svelte:head>
-
-<Background />
 
 {#if isLoading}
 	<div class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-neutral-950/50 backdrop-blur-sm">

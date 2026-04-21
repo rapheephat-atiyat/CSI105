@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { Loader2, Lock, KeyRound } from 'lucide-svelte';
 	import Swal from 'sweetalert2';
+	import { PUBLIC_APP_NAME } from '$env/static/public';
 
 	let password = $state('');
 	let confirmPassword = $state('');
@@ -85,10 +86,8 @@
 </script>
 
 <svelte:head>
-	<title>ตั้งรหัสผ่านใหม่</title>
+	<title>ตั้งรหัสผ่านใหม่ - {PUBLIC_APP_NAME}</title>
 </svelte:head>
-
-<Background />
 
 {#if isLoading}
 	<div class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-neutral-950/50 backdrop-blur-sm">

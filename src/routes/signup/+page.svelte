@@ -4,7 +4,7 @@
 	import { Loader2, Lock, UserPlus, Mail, User } from 'lucide-svelte';
 	import Swal from 'sweetalert2';
 	import { turnstile } from '@battlefieldduck/turnstile-svelte';
-	import { PUBLIC_SITE_KEY } from '$env/static/public';
+	import { PUBLIC_APP_NAME, PUBLIC_SITE_KEY } from '$env/static/public';
 
 	let username = $state('');
 	let email = $state('');
@@ -88,7 +88,7 @@
 </script>
 
 <svelte:head>
-	<title>สมัครสมาชิก</title>
+	<title>สมัครสมาชิก - {PUBLIC_APP_NAME}</title>
 </svelte:head>
 
 <div class="flex min-h-screen items-center justify-center p-4">

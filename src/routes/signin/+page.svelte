@@ -5,7 +5,7 @@
 	import { Loader2, Lock, LogIn, Mail } from 'lucide-svelte';
 	import Swal from 'sweetalert2';
 	import { turnstile } from '@battlefieldduck/turnstile-svelte';
-	import { PUBLIC_SITE_KEY } from '$env/static/public';
+	import { PUBLIC_APP_NAME, PUBLIC_SITE_KEY } from '$env/static/public';
 
 	let email = $state('');
 	let password = $state('');
@@ -87,10 +87,8 @@
 </script>
 
 <svelte:head>
-	<title>เข้าสู่ระบบ</title>
+	<title>เข้าสู่ระบบ - {PUBLIC_APP_NAME}</title>
 </svelte:head>
-
-<Background />
 
 {#if isLoading}
 	<div class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-neutral-950/50 backdrop-blur-sm">
@@ -182,7 +180,7 @@
 				</div>
 
 				<div class="mt-4 flex justify-center">
-					<div {@attach turnstile({ sitekey: PUBLIC_SITE_KEY.replace(',', '').trim(), callback: (token) => turnstileToken = token, 'error-callback': () => turnstileToken = '', theme: 'dark' })}></div>
+					<div {@attach turnstile({ sitekey: PUBLIC_SITE_KEY.replace(',', '').trim(), callback: (token) => (turnstileToken = token), 'error-callback': () => (turnstileToken = ''), theme: 'dark' })}></div>
 				</div>
 
 				<button type="submit" class="mt-6 w-full rounded-2xl bg-blue-600 py-4 font-bold text-white shadow-[0_0_20px_rgba(37,99,235,0.2)] transition-all hover:bg-blue-500 active:scale-[0.98]">เข้าสู่ระบบ</button>

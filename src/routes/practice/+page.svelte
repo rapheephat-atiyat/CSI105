@@ -11,6 +11,7 @@
 	import type { Algorithm, Difficulty, Step } from '$lib/types';
 	import Select from '$lib/components/ui/Select.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
+	import { PUBLIC_APP_NAME } from '$env/static/public';
 
 	let algoName = $state<Algorithm>('Bubble Sort');
 	let difficulty = $state<Difficulty>('normal');
@@ -209,12 +210,12 @@
 </script>
 
 <svelte:head>
-	<title>Practice Mode</title>
+	<title>ฝึกซ้อม - {PUBLIC_APP_NAME}</title>
 </svelte:head>
-			<div class="glow box1"></div>
-			<div class="glow box2"></div>
-			<div class="glow box3"></div>
-			<div class="glow box4"></div>
+<div class="glow box1"></div>
+<div class="glow box2"></div>
+<div class="glow box3"></div>
+<div class="glow box4"></div>
 <div class="relative mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-7xl flex-col gap-6 overflow-hidden p-4 md:flex-row md:p-8">
 	<!-- Sidebar Settings -->
 	<aside class="flex w-full shrink-0 flex-col gap-6 md:w-72">
@@ -222,7 +223,7 @@
 			<ArrowLeft size={16} /> กลับสู่ล็อบบี้
 		</button>
 
-		<div class="rounded-3xl border border-white/5 bg-neutral-950/40 p-6 backdrop-blur-md">
+		<div class="relative z-20 rounded-3xl border border-white/5 bg-neutral-950/40 p-6 backdrop-blur-md">
 			<div class="mb-6 flex items-center gap-3 border-b border-white/10 pb-4">
 				<Settings size={20} class="text-amber-400" />
 				<h2 class="text-sm font-black tracking-widest text-white uppercase">ตั้งค่าการซ้อม</h2>
@@ -360,6 +361,7 @@
 		</main>
 	</div>
 </div>
+
 <style>
 	.box1 {
 		position: absolute;
@@ -390,7 +392,7 @@
 	}
 	.box4 {
 		position: absolute;
-		top:100px;
+		top: 100px;
 		right: 950px;
 		width: 500px;
 		height: 500px;

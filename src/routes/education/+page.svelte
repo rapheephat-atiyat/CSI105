@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { ArrowRight, Cpu } from 'lucide-svelte';
 
 	const algorithms = [
@@ -46,6 +47,10 @@
 		}
 	];
 </script>
+
+<svelte:head>
+	<title>ห้องเรียน - {PUBLIC_APP_NAME}</title>
+</svelte:head>
 
 <div class="min-h-screen">
 	<div class="pointer-events-none fixed inset-0 z-0">

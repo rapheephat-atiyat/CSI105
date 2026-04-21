@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import Background from '$lib/components/ui/Background.svelte';
 	import { Trophy, Clock, Swords, CheckCircle2, Gamepad2, ArrowLeft } from 'lucide-svelte';
 
@@ -45,10 +46,8 @@
 </script>
 
 <svelte:head>
-	<title>โปรไฟล์ของฉัน | Sorting Match</title>
+	<title>โปรไฟล์ของฉัน - {PUBLIC_APP_NAME}</title>
 </svelte:head>
-
-<Background />
 
 <div class="container mx-auto min-h-screen px-4 py-8 pb-20">
 	<a href="/" class="mb-8 inline-flex items-center gap-2 rounded-xl bg-white/5 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-white/10 active:scale-95">
