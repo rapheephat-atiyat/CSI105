@@ -15,7 +15,7 @@ export const users = pgTable("users", {
 	rankScore: integer("rank_score").notNull().default(0),
 	role: userRoleEnum("role").notNull().default("user"),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updatedAt: timestamp("updated_at").notNull().defaultNow()
+	updatedAt: timestamp("updated_at").notNull().defaultNow().$onUpdateFn(() => new Date())
 })
 
 export const verifications = pgTable("verification", {
@@ -24,7 +24,7 @@ export const verifications = pgTable("verification", {
 	value: text("value").notNull(),
 	expiresAt: timestamp("expires_at").notNull(),
 	createdAt: timestamp("created_at"),
-	updatedAt: timestamp("updated_at")
+	updatedAt: timestamp("updated_at").$onUpdateFn(() => new Date())
 });
 
 export const sessions = pgTable("sessions", {
@@ -35,7 +35,7 @@ export const sessions = pgTable("sessions", {
 	userAgent: text("user_agent").notNull(),
 	expiresAt: timestamp("expires_at").notNull(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updatedAt: timestamp("updated_at").notNull().defaultNow()
+	updatedAt: timestamp("updated_at").notNull().defaultNow().$onUpdateFn(() => new Date())
 });
 
 export const accounts = pgTable("accounts", {
@@ -51,7 +51,7 @@ export const accounts = pgTable("accounts", {
 	scope: text("scope"),
 	password: text("password"),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updatedAt: timestamp("updated_at").notNull().defaultNow()
+	updatedAt: timestamp("updated_at").notNull().defaultNow().$onUpdateFn(() => new Date())
 });
 
 export const players = pgTable("players", {
@@ -77,7 +77,7 @@ export const gameRooms = pgTable("game_rooms", {
 	password: text("password"),
 	hostPlayerId: text("host_player_id").notNull().references(() => players.id, { onDelete: "cascade" }),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow().$onUpdateFn(() => new Date())
 }, (table) => [
 	index("idx_game_rooms_host_player_id").on(table.hostPlayerId),
 	index("idx_game_rooms_join_code").on(table.joinCode),

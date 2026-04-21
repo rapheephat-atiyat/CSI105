@@ -17,6 +17,12 @@ export const auth = betterAuth({
 			verification: schema.verifications
 		}
 	}),
+	account: {
+		accountLinking: {
+			enabled: true,
+			trustedProviders: ["github", "discord", "roblox"]
+		}
+	},
 	emailAndPassword: { enabled: true },
 	socialProviders: {
 		github: {
