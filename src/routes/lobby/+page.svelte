@@ -11,7 +11,7 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import Swal from 'sweetalert2';
-
+L
 	interface Room {
 		id: string;
 		joinCode: string;
