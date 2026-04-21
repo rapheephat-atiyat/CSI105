@@ -1,6 +1,10 @@
+import { db } from "$lib/server/db";
+import { gameRooms, players, roomParticipants, users } from "$lib/server/db/schema";
+import { and, eq } from "drizzle-orm";
 import { activeGames } from "../state/activeGames";
-import type { Algorithm, Difficulty, GameState, TypedServer, TypedSocket } from "../type";
-import { generateArray, getSolutionSteps } from "../utils/sorting";
+import type { GameState, TypedServer, TypedSocket } from "../type";
+import { generateArray, getSolutionSteps } from "$lib/utils/sorting";
+import type { Algorithm, Difficulty } from "$lib/types";
 
 export function createGame(roomId: string, algo: Algorithm, diff: Difficulty) {
     const initArray = generateArray(diff);
@@ -129,7 +133,8 @@ export function handleTimeout(socket: TypedSocket, io: TypedServer) {
     checkRoundEnd(game, roomId, rCode, io);
 }
 
-function checkRoundEnd(game: GameState, roomId: string, rCode: string, io: TypedServer) {
+
+async function checkRoundEnd(game: GameState, roomId: string, rCode: string, io: TypedServer) {
     const totalPlayers = (game as any).totalPlayers || 1;
     if (game.playersFinished >= totalPlayers) {
         if (game.currentRound < game.maxRounds) {
@@ -138,7 +143,43 @@ function checkRoundEnd(game: GameState, roomId: string, rCode: string, io: Typed
                 startNextRound(game, rCode, io);
             }, 5000);
         } else {
-            io.to(rCode).emit("game:match_finished");
+            try {
+                for (const pid in game.players) {
+                    const pState = game.players[pid];
+                    const finalScore = pState.score;
+
+                    await db.update(roomParticipants)
+                        .set({ score: finalScore, finishedAt: new Date() })
+                        .where(and(eq(roomParticipants.roomId, roomId), eq(roomParticipants.playerId, pid)));
+
+                    const playerRecord = await db.query.players.findFirst({
+                        where: eq(players.id, pid)
+                    });
+
+                    if (playerRecord && playerRecord.userId) {
+                        const userRecord = await db.query.users.findFirst({
+                            where: eq(users.id, playerRecord.userId)
+                        });
+
+                        if (userRecord) {
+                            await db.update(users)
+                                .set({ rankScore: (userRecord.rankScore || 0) + finalScore })
+                                .where(eq(users.id, userRecord.id));
+                        }
+                    }
+                }
+
+                await db.update(gameRooms)
+                    .set({ status: 'ended' })
+                    .where(eq(gameRooms.id, roomId));
+
+                io.to(rCode).emit("game:match_finished");
+                activeGames.delete(roomId);
+            } catch (err) {
+                console.error("Error saving match results: ", err);
+                io.to(rCode).emit("game:match_finished");
+                activeGames.delete(roomId);
+            }
         }
     }
 }

@@ -1,8 +1,7 @@
 import { db } from "$lib/server/db";
-import { gameRooms, players, roomParticipants, algorithmEnum, gameRoomModeEnum } from "$lib/server/db/schema";
+import { gameRooms, players, roomParticipants, algorithmEnum, gameRoomModeEnum, users } from "$lib/server/db/schema";
 import { eq, sql, desc } from "drizzle-orm";
 import type { PageServerLoad } from "./$types";
-
 
 export const load: PageServerLoad = async (event) => {
 	const rooms = await db.select({
@@ -49,8 +48,19 @@ export const load: PageServerLoad = async (event) => {
 		createdAt: r.createdAt
 	}));
 
+	const leaderboard = await db.select({
+		id: users.id,
+		name: users.name,
+		image: users.image,
+		rankScore: users.rankScore
+	})
+		.from(users)
+		.orderBy(desc(users.rankScore))
+		.limit(5);
+
 	return {
 		init,
+		leaderboard,
 		algorithms: algorithmEnum.enumValues,
 		modes: gameRoomModeEnum.enumValues
 	};

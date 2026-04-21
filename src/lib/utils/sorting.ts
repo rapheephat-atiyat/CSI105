@@ -1,4 +1,4 @@
-import type { Algorithm, Difficulty, Step } from "../type";
+import type { Algorithm, Difficulty, Step } from "$lib/types";
 
 const difficultyConfig: Record<Difficulty, { min: number; max: number }> = {
     easy: { min: 5, max: 8 },

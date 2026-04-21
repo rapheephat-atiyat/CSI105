@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Badge from '$lib/components/ui/Badge.svelte';
-	import Background from '$lib/components/ui/Background.svelte';
 	import { onMount, untrack } from 'svelte';
 	import { io, type Socket } from 'socket.io-client';
 	import { goto } from '$app/navigation';
@@ -24,8 +23,8 @@
 	let timeLeft = $state(60);
 	let interval: ReturnType<typeof setInterval>;
 
-	let dataArray = $state<{id: string, val: number}[]>([]);
-	let maxVal = $derived(dataArray.length > 0 ? Math.max(...dataArray.map(d => d.val)) : 100);
+	let dataArray = $state<{ id: string; val: number }[]>([]);
+	let maxVal = $derived(dataArray.length > 0 ? Math.max(...dataArray.map((d) => d.val)) : 100);
 
 	let draggingIndex = $state<number | null>(null);
 	let dragOverIndex = $state<number | null>(null);
@@ -320,9 +319,9 @@
 								}}
 								class="group/bar relative w-full rounded-t-xl transition-all duration-300
                                 {isWaitingNextRound ? 'opacity-30 grayscale' : 'cursor-pointer hover:brightness-125'} 
-								{dragOverIndex === i ? 'scale-105 border-2 border-blue-400 bg-blue-500/20 ring-4 ring-blue-500/20 z-40' : 'border border-white/10'}
-								{clickedIndex === i ? 'scale-110 border-2 border-blue-400 bg-blue-400/30 z-40' : ''}
-								{hintedIndices.includes(i) ? 'animate-pulse border-2 border-emerald-400 ring-4 ring-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.8)] z-50' : ''}"
+								{dragOverIndex === i ? 'z-40 scale-105 border-2 border-blue-400 bg-blue-500/20 ring-4 ring-blue-500/20' : 'border border-white/10'}
+								{clickedIndex === i ? 'z-40 scale-110 border-2 border-blue-400 bg-blue-400/30' : ''}
+								{hintedIndices.includes(i) ? 'z-50 animate-pulse border-2 border-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.8)] ring-4 ring-emerald-500/50' : ''}"
 								style="
                                     height: {(item.val / maxVal) * 85 + 5}%; 
                                     background: {hintedIndices.includes(i) ? 'linear-gradient(to top, rgba(16, 185, 129, 0.4), rgba(52, 211, 153, 0.9))' : `linear-gradient(to top, hsla(${(item.val / maxVal) * 280}, 80%, 20%, 0.5), hsla(${(item.val / maxVal) * 280}, 80%, 60%, 0.9))`};

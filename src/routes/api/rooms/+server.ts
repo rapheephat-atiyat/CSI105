@@ -2,7 +2,7 @@ import { getAuth, sendError, sendSuccess } from "$lib/server/api";
 import { db } from "$lib/server/db";
 import { algorithmEnum, gameRoomModeEnum, gameRooms, players } from "$lib/server/db/schema";
 import { getOrCreatePlayer } from "$lib/server/player";
-import { generateArray } from "$lib/server/socket/utils/sorting";
+import { generateArray } from "$lib/utils/sorting";
 import type { RequestEvent, RequestHandler } from "@sveltejs/kit";
 import { and, desc, eq } from "drizzle-orm";
 

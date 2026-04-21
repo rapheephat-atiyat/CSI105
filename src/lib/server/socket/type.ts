@@ -1,9 +1,5 @@
-import type { algorithmEnum, gameRoomModeEnum } from "$lib/server/db/schema";
 import type { Server, Socket } from "socket.io";
-
-export type Difficulty = typeof gameRoomModeEnum.enumValues[number];
-export type Algorithm = typeof algorithmEnum.enumValues[number];
-export type Step = { type: "swap"; a: number; b: number } | { type: "compare"; a: number; b: number } | { type: "overwrite"; index: number; value: number };
+import type { Algorithm, Difficulty, Step } from "$lib/types";
 
 export interface GameState {
     algo: Algorithm;

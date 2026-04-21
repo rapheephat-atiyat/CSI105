@@ -7,7 +7,7 @@
 	import Input from '$lib/components/ui/Input.svelte';
 	import Select from '$lib/components/ui/Select.svelte';
 	import Checkbox from '$lib/components/ui/Checkbox.svelte';
-	import { Lock, Play, Plus, Search, Server, Users, Wifi, Globe, Key } from 'lucide-svelte';
+	import { Lock, Play, Plus, Search, Server, Users, Wifi, Globe, Key, Trophy, Crown, Dumbbell } from 'lucide-svelte';
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import Swal from 'sweetalert2';
@@ -244,7 +244,7 @@
 
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
 		<div class="flex flex-col gap-10 lg:col-span-8">
-			<div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+			<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
 				<ActionCard title="แข่งขันด่วน" description="เข้าร่วมการแข่งขันทันที" colorClass="blue" onClick={() => {}}>
 					{#snippet icon()}<Play size={24} fill="currentColor" class="ml-1" />{/snippet}
 				</ActionCard>
@@ -255,6 +255,10 @@
 
 				<ActionCard title="เข้าร่วมรหัส" description="เข้าห้องส่วนตัวด้วยรหัส" colorClass="emerald" onClick={handleManualJoinClick}>
 					{#snippet icon()}<Key size={24} class="ml-1" />{/snippet}
+				</ActionCard>
+
+				<ActionCard title="โหมดฝึกซ้อม" description="แวะฝึกซ้อมทักษะก่อนท้าดวล" colorClass="indigo" onClick={() => goto('/practice')}>
+					{#snippet icon()}<Dumbbell size={24} />{/snippet}
 				</ActionCard>
 			</div>
 
@@ -314,13 +318,60 @@
 				<div class="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-blue-600/10 blur-[80px]"></div>
 
 				<div class="relative z-10 flex flex-col items-center">
-					<div class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-tr from-blue-600 to-indigo-500 p-0.5 shadow-[0_0_30px_rgba(59,130,246,0.2)] sm:mb-6 sm:h-24 sm:w-24">
-						<div class="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-neutral-950/90 text-2xl font-black text-white sm:text-3xl">
-							<img src={user?.image ?? `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id ?? 'guest'}`} alt="avatar" class="h-full w-full object-cover" />
+					<div class="mb-4 flex w-full items-center gap-3 border-b border-white/10 pb-4">
+						<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-tr from-amber-500/20 to-orange-500/20 text-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.15)] ring-1 ring-amber-500/30">
+							<Trophy size={24} />
+						</div>
+						<div>
+							<h3 class="text-xl font-black tracking-tight text-white">LeaderBoard</h3>
+							<p class="text-[10px] font-medium tracking-wider text-amber-500/80 uppercase">Top Players</p>
 						</div>
 					</div>
-					<h3 class="text-lg font-bold text-white sm:text-xl">{user?.name ?? 'Guest'}</h3>
-					<p class="mt-1 text-xs font-medium text-zinc-500">{user ? 'Online Player' : 'Casual Guest'}</p>
+
+					<div class="flex w-full flex-col gap-2.5">
+						{#each data.leaderboard as player, index}
+							<div class="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-white/5 bg-white/5 p-3 transition-all hover:border-amber-500/20 hover:bg-white/10">
+								{#if index === 0}
+									<div class="absolute inset-0 bg-linear-to-r from-amber-500/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+								{:else if index === 1}
+									<div class="absolute inset-0 bg-linear-to-r from-zinc-400/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+								{:else if index === 2}
+									<div class="absolute inset-0 bg-linear-to-r from-orange-600/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+								{/if}
+
+								<div class="relative z-10 flex w-full items-center justify-between">
+									<div class="flex items-center gap-3.5">
+										<div
+											class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-black shadow-inner
+											{index === 0 ? 'bg-linear-to-br from-amber-300 to-amber-600 text-amber-950 shadow-amber-500/50' : index === 1 ? 'bg-linear-to-br from-zinc-300 to-zinc-500 text-zinc-900 shadow-zinc-400/50' : index === 2 ? 'bg-linear-to-br from-orange-400 to-orange-700 text-orange-950 shadow-orange-600/50' : 'bg-white/5 text-white/40 ring-1 ring-white/10'}"
+										>
+											{index + 1}
+										</div>
+										<div class="relative">
+											<img src={player.image ?? `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.name}`} alt={player.name} class="h-10 w-10 rounded-full object-cover shadow-md ring-2 ring-white/10 transition-all group-hover:ring-white/30" />
+											{#if index === 0}
+												<div class="absolute -top-1.5 -right-1.5 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-linear-to-tr from-amber-300 to-amber-500 shadow-sm ring-[2.5px] ring-neutral-900">
+													<Crown size={13} class="text-amber-950" strokeWidth={2.5} />
+												</div>
+											{/if}
+										</div>
+										<span class="max-w-[100px] truncate text-sm font-bold text-white/90 transition-colors group-hover:text-white sm:max-w-[120px]">{player.name}</span>
+									</div>
+									<div class="flex items-end gap-1">
+										<span class="text-base leading-none font-black {index === 0 ? 'text-amber-400' : index === 1 ? 'text-zinc-300' : index === 2 ? 'text-orange-400' : 'text-blue-400/80'}">
+											{player.rankScore.toLocaleString()}
+										</span>
+										<span class="mb-0.5 text-[9px] font-bold tracking-widest text-zinc-500 uppercase">PTS</span>
+									</div>
+								</div>
+							</div>
+						{:else}
+							<div class="flex flex-col items-center justify-center gap-2 py-10 opacity-60">
+								<Trophy size={32} class="text-zinc-600" />
+								<p class="text-xs font-medium tracking-wide text-zinc-500">Unranked Region</p>
+							</div>
+						{/each}
+					</div>
 				</div>
 			</div>
 		</div>

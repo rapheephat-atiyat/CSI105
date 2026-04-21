@@ -2,42 +2,87 @@
 	import { authClient } from '$lib/client/auth';
 	import { goto } from '$app/navigation';
 	import { Loader2, Lock, UserPlus, Mail, User } from 'lucide-svelte';
+	import Swal from 'sweetalert2';
+	import { turnstile } from '@battlefieldduck/turnstile-svelte';
+	import { PUBLIC_SITE_KEY } from '$env/static/public';
 
 	let username = $state('');
 	let email = $state('');
 	let password = $state('');
 	let isLoading = $state(false);
-	let errorMessage = $state('');
+	let turnstileToken = $state('');
 
 	async function handleEmailSignup(e: Event) {
 		e.preventDefault();
+
+		if (!turnstileToken) {
+			Swal.fire({
+				icon: 'warning',
+				title: 'กรุณายืนยันตัวตน',
+				text: 'โปรดติ๊กถูกที่ช่องยืนยันตัวตนก่อนสร้างบัญชี',
+				background: '#171717',
+				color: '#fff',
+				confirmButtonColor: '#2563eb'
+			});
+			return;
+		}
+
 		isLoading = true;
-		errorMessage = '';
 
 		const { data, error } = await authClient.signUp.email({
 			email,
 			password,
-			name: username
+			name: username,
+			fetchOptions: {
+				headers: {
+					'x-turnstile-token': turnstileToken
+				}
+			}
 		});
 
 		if (error) {
-			errorMessage = error.message || 'การสมัครสมาชิกล้มเหลว กรุณาลองใหม่อีกครั้ง';
 			isLoading = false;
+			if (window.turnstile) window.turnstile.reset();
+			turnstileToken = '';
+			Swal.fire({
+				icon: 'error',
+				title: 'สมัครสมาชิกไม่สำเร็จ',
+				text: error.message || 'การสมัครสมาชิกล้มเหลว กรุณาลองใหม่อีกครั้ง',
+				background: '#171717',
+				color: '#fff',
+				confirmButtonColor: '#ef4444'
+			});
 		} else {
-			goto('/');
+			Swal.fire({
+				icon: 'success',
+				title: 'สมัครสมาชิกสำเร็จ',
+				text: 'กำลังพาท่านเข้าสู่หน้าหลัก...',
+				timer: 1500,
+				showConfirmButton: false,
+				background: '#171717',
+				color: '#fff'
+			}).then(() => {
+				goto('/');
+			});
 		}
 	}
 
 	async function handleSocialSignup(provider: 'github' | 'google' | 'discord' | 'roblox') {
 		isLoading = true;
-		errorMessage = '';
 		const { error } = await authClient.signIn.social({
 			provider,
 			callbackURL: '/'
 		});
 		if (error) {
-			errorMessage = error.message || `${provider} login ล้มเหลว`;
 			isLoading = false;
+			Swal.fire({
+				icon: 'error',
+				title: 'เข้าสู่ระบบล้มเหลว',
+				text: error.message || `${provider} login ล้มเหลว`,
+				background: '#171717',
+				color: '#fff',
+				confirmButtonColor: '#ef4444'
+			});
 		}
 	}
 </script>
@@ -55,12 +100,6 @@
 			<h1 class="text-2xl font-bold tracking-tight text-white">สร้างบัญชีใหม่</h1>
 			<p class="mt-2 text-sm text-neutral-400">เริ่มต้นสะสมคะแนนและไต่อันดับของคุณ</p>
 		</div>
-
-		{#if errorMessage}
-			<div class="mb-6 rounded-xl border border-red-500/20 bg-red-500/20 p-3 text-center text-sm text-red-400">
-				{errorMessage}
-			</div>
-		{/if}
 
 		<div class="space-y-6">
 			<div class="grid grid-cols-4 gap-2">
@@ -138,6 +177,9 @@
 					</div>
 				</div>
 
+				<div class="mt-4 flex justify-center">
+					<div {@attach turnstile({ sitekey: PUBLIC_SITE_KEY.replace(',', '').trim(), callback: (token) => (turnstileToken = token), 'error-callback': () => (turnstileToken = ''), theme: 'dark' })}></div>
+				</div>
 				<button type="submit" class="mt-6 w-full rounded-2xl bg-blue-600 py-4 font-bold text-white shadow-[0_0_20px_rgba(37,99,235,0.2)] transition-all hover:bg-blue-500 active:scale-[0.98]">สร้างบัญชี</button>
 			</form>
 
