@@ -350,12 +350,12 @@
 										<div class="relative">
 											<img src={player.image ?? `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.name}`} alt={player.name} class="h-10 w-10 rounded-full object-cover shadow-md ring-2 ring-white/10 transition-all group-hover:ring-white/30" />
 											{#if index === 0}
-												<div class="absolute -top-1.5 -right-1.5 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-linear-to-tr from-amber-300 to-amber-500 shadow-sm ring-[2.5px] ring-neutral-900">
+												<div class="absolute -top-1.5 -right-1.5 flex h-5.5 w-5.5 items-center justify-center rounded-full bg-linear-to-tr from-amber-300 to-amber-500 shadow-sm ring-[2.5px] ring-neutral-900">
 													<Crown size={13} class="text-amber-950" strokeWidth={2.5} />
 												</div>
 											{/if}
 										</div>
-										<span class="max-w-[100px] truncate text-sm font-bold text-white/90 transition-colors group-hover:text-white sm:max-w-[120px]">{player.name}</span>
+										<span class="max-w-25 truncate text-sm font-bold text-white/90 transition-colors group-hover:text-white sm:max-w-30">{player.name}</span>
 									</div>
 									<div class="flex items-end gap-1">
 										<span class="text-base leading-none font-black {index === 0 ? 'text-amber-400' : index === 1 ? 'text-zinc-300' : index === 2 ? 'text-orange-400' : 'text-blue-400/80'}">

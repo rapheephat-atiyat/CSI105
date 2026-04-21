@@ -1,5 +1,5 @@
 import { db } from "$lib/server/db";
-import { gameRooms, players, roomParticipants, users } from "$lib/server/db/schema";
+import { gameRooms, players, roomParticipants, users, historicGames } from "$lib/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { activeGames } from "../state/activeGames";
 import type { GameState, TypedServer, TypedSocket } from "../type";
@@ -157,6 +157,15 @@ async function checkRoundEnd(game: GameState, roomId: string, rCode: string, io:
                     });
 
                     if (playerRecord && playerRecord.userId) {
+                        await db.insert(historicGames).values({
+                            userId: playerRecord.userId,
+                            roomId: roomId,
+                            algorithm: game.algo,
+                            mode: game.difficulty,
+                            score: finalScore,
+                            playedAt: new Date()
+                        });
+
                         const userRecord = await db.query.users.findFirst({
                             where: eq(users.id, playerRecord.userId)
                         });

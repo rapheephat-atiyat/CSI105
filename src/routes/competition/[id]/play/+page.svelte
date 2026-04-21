@@ -223,7 +223,10 @@
 <svelte:head>
 	<title>Play: {algoName}</title>
 </svelte:head>
-
+			<div class="glow box1"></div>
+			<div class="glow box2"></div>
+			<div class="glow box3"></div>
+			<div class="glow box4"></div>
 <div class="relative z-10 mx-auto flex h-[calc(100vh-5rem)] w-full max-w-380 flex-col gap-6 overflow-hidden p-4 md:flex-row md:p-8">
 	<aside class="flex w-full shrink-0 flex-col gap-4 md:w-64 lg:w-72">
 		<div class="flex items-center gap-2 px-2">
@@ -401,4 +404,29 @@
 		-ms-overflow-style: none;
 		scrollbar-width: none;
 	}
+	.box1 {
+		position: absolute;
+		top: 400px;
+		right: 20px;
+		width: 300px;
+		height: 300px;
+		border-radius: 50%;
+		filter: blur(50px);
+	}
+	.box2 {
+		position: absolute;
+		top: 200px;
+		right: 150px;
+		width: 560px;
+		height: 560px;
+		border-radius: 50%;
+		filter: blur(50px);
+	}
+	.box1 {
+		background: rgba(0, 255, 200, 0.2);
+	}
+	.box2 {
+		background: rgba(0, 255, 119, 0.2);
+	}
+
 </style>

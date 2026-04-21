@@ -171,7 +171,7 @@
 				<div class="space-y-1">
 					<div class="ml-1 flex items-center justify-between">
 						<label for="password" class="text-sm font-medium text-neutral-400">รหัสผ่าน</label>
-						<button onclick={() => Swal.fire({ title: 'ลืมต่อไป', text: '', icon: 'info' })} class="text-xs text-blue-400 hover:text-blue-300 hover:underline">ลืมรหัสผ่าน?</button>
+						<a href="/forgot-password" class="text-xs text-blue-400 hover:text-blue-300 hover:underline">ลืมรหัสผ่าน?</a>
 					</div>
 					<div class="relative">
 						<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">

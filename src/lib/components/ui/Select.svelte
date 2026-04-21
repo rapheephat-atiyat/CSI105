@@ -57,14 +57,7 @@
 			<ul class="custom-scrollbar absolute top-full z-50 mt-1.5 max-h-60 w-full overflow-y-auto overscroll-contain rounded-xl border border-white/10 bg-[#121212] py-1.5 shadow-xl shadow-black/60 focus:outline-none" role="listbox">
 				{#each options as opt}
 					<li role="presentation">
-						<button
-							type="button"
-							class="w-full cursor-pointer px-4 py-2.5 text-left text-sm text-zinc-300 transition-colors select-none hover:bg-white/10 hover:text-white
-                                   {value === opt.value ? FLAVOR_BG[flavor] + ' font-medium' : ''}"
-							onclick={() => handleSelect(opt.value)}
-							role="option"
-							aria-selected={value === opt.value}
-						>
+						<button type="button" class="w-full cursor-pointer px-4 py-2.5 text-left text-sm text-zinc-300 transition-colors select-none hover:bg-white/10 hover:text-white {value === opt.value ? FLAVOR_BG[flavor] + ' font-medium' : ''}" onclick={() => handleSelect(opt.value)} role="option" aria-selected={value === opt.value}>
 							{opt.label ?? opt.value}
 						</button>
 					</li>

@@ -211,8 +211,11 @@
 <svelte:head>
 	<title>Practice Mode</title>
 </svelte:head>
-
-<div class="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-7xl flex-col gap-6 overflow-hidden p-4 md:flex-row md:p-8">
+			<div class="glow box1"></div>
+			<div class="glow box2"></div>
+			<div class="glow box3"></div>
+			<div class="glow box4"></div>
+<div class="relative mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-7xl flex-col gap-6 overflow-hidden p-4 md:flex-row md:p-8">
 	<!-- Sidebar Settings -->
 	<aside class="flex w-full shrink-0 flex-col gap-6 md:w-72">
 		<button onclick={() => goto('/lobby')} class="flex w-fit items-center gap-2 rounded-xl bg-white/5 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-white/10">
@@ -250,7 +253,7 @@
 					flavor="indigo"
 				/>
 
-				<Button variant="primary" class="mt-2 w-full" onclick={initGame}>
+				<Button variant="primary" class="mt-2 flex w-full items-center justify-center" onclick={initGame}>
 					<RotateCcw size={16} class="mr-2" /> โหลดข้อมูลใหม่
 				</Button>
 			</div>
@@ -260,7 +263,7 @@
 			<h3 class="mb-4 text-xs font-black tracking-widest text-blue-400 uppercase">โหมดจำลอง</h3>
 			<p class="mb-4 text-xs font-medium text-zinc-400">ระบบจะทำการสลับข้อมูลให้ดูเป็นตัวอย่างทีละขั้นตอนจนกว่าจะเสร็จสิ้น</p>
 
-			<Button variant="indigo" class="w-full" onclick={toggleAutoPlay}>
+			<Button variant="indigo" class="flex w-full items-center justify-center" onclick={toggleAutoPlay}>
 				{#if isAutoPlaying}
 					<RotateCcw size={16} class="mr-2 animate-spin" />หยุดการจำลอง
 				{:else}
@@ -299,7 +302,7 @@
 					<span class="h-2 w-2 rounded-full bg-white/10"></span>
 					<span class="h-2 w-2 rounded-full bg-white/10"></span>
 				</div>
-				<div class="mx-auto flex items-center gap-2 font-mono text-[9px] tracking-widest text-zinc-600 uppercase">
+				<div class="mx-auto flex items-center gap-2 font-mono text-[9px] tracking-widest text-zinc-600 uppercase" id="boxx">
 					<BarChart3 size={12} /> ห้องฝึกซ้อมอิสระ
 				</div>
 			</div>
@@ -357,3 +360,53 @@
 		</main>
 	</div>
 </div>
+<style>
+	.box1 {
+		position: absolute;
+		top: 400px;
+		right: 20px;
+		width: 300px;
+		height: 300px;
+		border-radius: 50%;
+		filter: blur(50px);
+	}
+	.box2 {
+		position: absolute;
+		top: 200px;
+		right: 150px;
+		width: 560px;
+		height: 560px;
+		border-radius: 50%;
+		filter: blur(50px);
+	}
+	.box3 {
+		position: absolute;
+		top: 10px;
+		right: 820px;
+		width: 300px;
+		height: 300px;
+		border-radius: 50%;
+		filter: blur(50px);
+	}
+	.box4 {
+		position: absolute;
+		top:100px;
+		right: 950px;
+		width: 500px;
+		height: 500px;
+		border-radius: 50%;
+		filter: blur(50px);
+	}
+	.box1 {
+		background: rgba(255, 0, 234, 0.2);
+	}
+	.box2 {
+		background: rgba(153, 0, 255, 0.2);
+	}
+	.box3 {
+		background: rgba(9, 0, 255, 0.2);
+	}
+	.box4 {
+		background: rgba(0, 170, 255, 0.2);
+	}
+</style>

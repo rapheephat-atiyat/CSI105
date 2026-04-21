@@ -1,5 +1,3 @@
-
-
 import type { RequestEvent } from "@sveltejs/kit";
 import { auth } from "./auth";
 import { db } from "./db";

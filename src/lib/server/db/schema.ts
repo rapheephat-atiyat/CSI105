@@ -16,7 +16,17 @@ export const users = pgTable("users", {
 	role: userRoleEnum("role").notNull().default("user"),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow().$onUpdateFn(() => new Date())
-})
+});
+
+export const historicGames = pgTable("historic_games", {
+	id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+	userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+	roomId: text("room_id").notNull(),
+	algorithm: algorithmEnum("algorithm").notNull(),
+	mode: gameRoomModeEnum("mode").notNull(),
+	score: integer("score").notNull().default(0),
+	playedAt: timestamp("played_at").notNull().defaultNow(),
+});
 
 export const verifications = pgTable("verification", {
 	id: text("id").primaryKey(),
@@ -26,6 +36,7 @@ export const verifications = pgTable("verification", {
 	createdAt: timestamp("created_at"),
 	updatedAt: timestamp("updated_at").$onUpdateFn(() => new Date())
 });
+
 
 export const sessions = pgTable("sessions", {
 	id: text("id").primaryKey(),

@@ -29,6 +29,7 @@
 		"@tailwindcss/typography": "^0.5.19",
 		"@tailwindcss/vite": "^4.2.2",
 		"@types/node": "^22",
+		"@types/nodemailer": "^8.0.0",
 		"better-auth": "~1.4.21",
 		"drizzle-kit": "^0.31.10",
 		"drizzle-orm": "^0.45.2",
@@ -50,6 +51,7 @@
 	"dependencies": {
 		"@battlefieldduck/turnstile-svelte": "^1.0.1",
 		"lucide-svelte": "^1.0.1",
+		"nodemailer": "^8.0.5",
 		"socket.io": "^4.8.3",
 		"socket.io-client": "^4.8.3",
 		"sweetalert2": "^11.26.24"

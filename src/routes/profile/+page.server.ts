@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { eq, desc } from 'drizzle-orm';
-import { players, roomParticipants, gameRooms, users } from '$lib/server/db/schema';
+import { players, roomParticipants, gameRooms, users, historicGames } from '$lib/server/db/schema';
 import { redirect } from '@sveltejs/kit';
 
 export const load = async (event) => {
@@ -25,23 +25,25 @@ export const load = async (event) => {
 
 	const history = await db
 		.select({
-			roomId: gameRooms.id,
-			algorithm: gameRooms.algorithm,
-			mode: gameRooms.mode,
-			status: gameRooms.status,
-			score: roomParticipants.score,
-			joinedAt: roomParticipants.joinedAt,
-			finishedAt: roomParticipants.finishedAt,
-			createdAt: gameRooms.createdAt
+			roomId: historicGames.roomId,
+			algorithm: historicGames.algorithm,
+			mode: historicGames.mode,
+			score: historicGames.score,
+			playedAt: historicGames.playedAt
 		})
-		.from(roomParticipants)
-		.innerJoin(gameRooms, eq(roomParticipants.roomId, gameRooms.id))
-		.where(eq(roomParticipants.playerId, playerRecord.id))
-		.orderBy(desc(gameRooms.createdAt))
+		.from(historicGames)
+		.where(eq(historicGames.userId, sessionUser.id))
+		.orderBy(desc(historicGames.playedAt))
 		.limit(20);
+
+	const mappedHistory = history.map(h => ({
+		...h,
+		status: 'ended',
+		createdAt: h.playedAt
+	}));
 
 	return {
 		user: userRecord || sessionUser,
-		history
+		history: mappedHistory
 	};
 };
