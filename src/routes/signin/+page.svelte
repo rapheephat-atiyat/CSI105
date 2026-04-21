@@ -2,7 +2,6 @@
 	import Background from '$lib/components/ui/Background.svelte';
 	import { authClient } from '$lib/client/auth';
 	import { goto } from '$app/navigation';
-	import Navbar from '$lib/components/layout/Navbar.svelte';
 	import { Loader2, Lock, LogIn, Mail } from 'lucide-svelte';
 	import Swal from 'sweetalert2';
 
@@ -29,7 +28,7 @@
 		}
 	}
 
-	async function handleSocialLogin(provider: 'github' | 'google' | 'discord' | 'facebook') {
+	async function handleSocialLogin(provider: 'github' | 'google' | 'discord' | 'roblox') {
 		isLoading = true;
 		errorMessage = '';
 		const { error } = await authClient.signIn.social({
@@ -95,16 +94,11 @@
 					>
 					Discord
 				</button>
-				<button onclick={() => handleSocialLogin('facebook')} type="button" class="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white transition-all hover:bg-[#1877F2] active:scale-[0.98]">
+				<button onclick={() => handleSocialLogin('roblox')} type="button" class="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white transition-all hover:bg-[#1877F2] active:scale-[0.98]">
 					<span class="size-5">
-						<svg viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"
-							><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-								<title>Facebook-color</title> <desc>Created with Sketch.</desc> <defs> </defs>
-								<g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Color-" transform="translate(-200.000000, -160.000000)" fill="#4460A0"> <path d="M225.638355,208 L202.649232,208 C201.185673,208 200,206.813592 200,205.350603 L200,162.649211 C200,161.18585 201.185859,160 202.649232,160 L245.350955,160 C246.813955,160 248,161.18585 248,162.649211 L248,205.350603 C248,206.813778 246.813769,208 245.350955,208 L233.119305,208 L233.119305,189.411755 L239.358521,189.411755 L240.292755,182.167586 L233.119305,182.167586 L233.119305,177.542641 C233.119305,175.445287 233.701712,174.01601 236.70929,174.01601 L240.545311,174.014333 L240.545311,167.535091 C239.881886,167.446808 237.604784,167.24957 234.955552,167.24957 C229.424834,167.24957 225.638355,170.625526 225.638355,176.825209 L225.638355,182.167586 L219.383122,182.167586 L219.383122,189.411755 L225.638355,189.411755 L225.638355,208 L225.638355,208 Z" id="Facebook"> </path> </g> </g>
-							</g></svg
-						>
+						<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style>.a{fill:none;stroke:#ff0000;stroke-linecap:round;stroke-linejoin:round;}</style></defs><path class="a" d="M41.2648,12.6719,14.7123,5.5572a1.666,1.666,0,0,0-2.04,1.178L5.5572,33.2877a1.666,1.666,0,0,0,1.178,2.04l26.5525,7.1147a1.666,1.666,0,0,0,2.04-1.178l7.1147-26.5525a1.666,1.666,0,0,0-1.178-2.04Z"></path><path class="a" d="M29.3193,20.51l-8.1808-2.192a.5133.5133,0,0,0-.6287.3629l-2.192,8.1808a.5133.5133,0,0,0,.3629.6287l8.1808,2.192a.5133.5133,0,0,0,.6287-.3629l2.192-8.1808A.5133.5133,0,0,0,29.3193,20.51Z"></path></g></svg>
 					</span>
-					Facebook
+					Roblox
 				</button>
 			</div>
 

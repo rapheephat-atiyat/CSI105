@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Background from '$lib/components/ui/Background.svelte';
 	import { authClient } from '$lib/client/auth';
 	import { goto } from '$app/navigation';
 	import { Loader2, Lock, UserPlus, Mail, User } from 'lucide-svelte';
@@ -29,7 +28,7 @@
 		}
 	}
 
-	async function handleSocialSignup(provider: 'github' | 'google' | 'discord' | 'facebook') {
+	async function handleSocialSignup(provider: 'github' | 'google' | 'discord' | 'roblox') {
 		isLoading = true;
 		errorMessage = '';
 		const { error } = await authClient.signIn.social({
@@ -84,15 +83,24 @@
 						><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z" /></svg
 					>
 				</button>
-				<button onclick={() => handleSocialSignup('facebook')} type="button" class="flex justify-center rounded-xl border border-white/10 bg-white/5 py-3 text-white transition-all hover:bg-[#1877F2] active:scale-[0.98]"
-					><span class="size-5">
-						<svg viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"
-							><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-								<title>Facebook-color</title> <desc>Created with Sketch.</desc> <defs> </defs>
-								<g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Color-" transform="translate(-200.000000, -160.000000)" fill="#4460A0"> <path d="M225.638355,208 L202.649232,208 C201.185673,208 200,206.813592 200,205.350603 L200,162.649211 C200,161.18585 201.185859,160 202.649232,160 L245.350955,160 C246.813955,160 248,161.18585 248,162.649211 L248,205.350603 C248,206.813778 246.813769,208 245.350955,208 L233.119305,208 L233.119305,189.411755 L239.358521,189.411755 L240.292755,182.167586 L233.119305,182.167586 L233.119305,177.542641 C233.119305,175.445287 233.701712,174.01601 236.70929,174.01601 L240.545311,174.014333 L240.545311,167.535091 C239.881886,167.446808 237.604784,167.24957 234.955552,167.24957 C229.424834,167.24957 225.638355,170.625526 225.638355,176.825209 L225.638355,182.167586 L219.383122,182.167586 L219.383122,189.411755 L225.638355,189.411755 L225.638355,208 L225.638355,208 Z" id="Facebook"> </path> </g> </g>
-							</g></svg
-						>
+				<button onclick={() => handleSocialSignup('roblox')} type="button" class="flex justify-center rounded-xl border border-white/10 bg-white/5 py-3 text-white transition-all hover:bg-[#1877F2] active:scale-[0.98]">
+					<span class="size-5">
+						<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#000000"
+							><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"
+								><defs
+									><style>
+										.a {
+											fill: none;
+											stroke: #ff0000;
+											stroke-linecap: round;
+											stroke-linejoin: round;
+										}
+									</style></defs
+								><path class="a" d="M41.2648,12.6719,14.7123,5.5572a1.666,1.666,0,0,0-2.04,1.178L5.5572,33.2877a1.666,1.666,0,0,0,1.178,2.04l26.5525,7.1147a1.666,1.666,0,0,0,2.04-1.178l7.1147-26.5525a1.666,1.666,0,0,0-1.178-2.04Z"></path><path class="a" d="M29.3193,20.51l-8.1808-2.192a.5133.5133,0,0,0-.6287.3629l-2.192,8.1808a.5133.5133,0,0,0,.3629.6287l8.1808,2.192a.5133.5133,0,0,0,.6287-.3629l2.192-8.1808A.5133.5133,0,0,0,29.3193,20.51Z"></path></g
+							>
+							</svg>
 					</span>
+					Roblox
 				</button>
 			</div>
 

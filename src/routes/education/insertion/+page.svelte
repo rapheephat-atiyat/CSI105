@@ -11,7 +11,7 @@
     let states = $state([]);
     let currentStep = $state(0);
     let isPlaying = $state(false);
-    let speed = $state(600);
+    let speed = $state(100);
     let timer;
     let autoLoopTimer;
 
@@ -156,194 +156,208 @@
         font-family: 'Inter', sans-serif;
     }
 
-    /* Layout */
-    .main {
-        padding: 50px 24px 40px;
-        max-width: 1300px;
-        margin: auto;
-    }
+    body {
+		margin: 0;
+		background: #0b0f1a;
+		color: #fff;
+		font-family: sans-serif;
+	}
 
-    .layout {
-        display: grid;
-        gap: 20px;
-        margin-top: 40px;
-    }
+	/* Layout */
+	.main {
+		padding: 100px 24px 40px;
+		max-width: 1300px;
+		margin: auto;
+	}
 
-    @media (min-width: 1024px) {
-        .layout {
-            grid-template-columns: 4fr 8fr;
-        }
-    }
+	.layout {
+		display: grid;
+		gap: 20px;
+	}
 
-    /* Header */
-    .header h1 {
-        font-size: 60px;
-        margin: 10px 0;
-    }
+	@media (min-width: 1024px) {
+		.layout {
+			grid-template-columns: 4fr 8fr;
+		}
+	}
 
-    .header p {
-        color: #94a3b8;
-        max-width: 1000px;
-        padding-bottom: 30px;
-        line-height: 1.6;
-    }
+	/* Header */
+	.header h1 {
+		font-size: 60px;
+		margin: 10px 0;
+	}
 
-    .line {
-        width: 100px;
-        height: 10px;
-        background: rgba(100, 255, 200, 0.4);
-        border-radius: 10px;
-    }
+	.header p {
+		color: #94a3b8;
+		max-width: 600px;
+		padding-bottom: 30px;
+	}
 
-    /* Card */
-    .card {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 20px;
-        padding: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+	.line {
+		width: 100px;
+		height: 10px;
+		background: rgba(100, 255, 200, 0.4);
+		border-radius: 10px;
+	}
 
-    .glass {
-        padding-top: 20px;
-        color: #94a3b8;
-    }
+	/* Card */
+	.card {
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 20px;
+		padding: 20px;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
 
-    /* Rows */
-    .row {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 15px;
-    }
+	.glass {
+		padding-top: 20px;
+		color: #94a3b8;
+	}
 
-    .row span {
-        color: #94a3b8;
-    }
+	/* Rows */
+	.row {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 15px;
+	}
 
-    .row strong {
-        font-size: 20px;
-    }
+	.row span {
+		color: #94a3b8;
+	}
 
-    /* Colors */
-    .pink { color: #ff6c95; }
-    .blue { color: #81ecff; }
-    .green { color: #6bfad8; }
+	.row strong {
+		font-size: 20px;
+	}
 
-    /*  BOX  */
-    .protocol-box {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 20px;
-        padding: 40px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
-        position: relative;
-        overflow: hidden;
-    }
+	/* Colors */
+	.pink {
+		color: #ff6c95;
+	}
+	.blue {
+		color: #81ecff;
+	}
+	.green {
+		color: #6bfad8;
+	}
 
-    .box1{
-        position: absolute;
-        top: 220px;
-        right: -10px;
-        width: 280px;
-        height: 280px;
-        border-radius: 50%;
-        filter: blur(50px);
-        background: rgba(79, 209, 255, 0.2);
-    }	
-    .box2{
-        position: absolute;
-        top: 50px;
-        right: 1150px;
-        width: 260px;
-        height: 260px;
-        border-radius: 50%;
-        filter: blur(50px);
-        background: rgba(100, 255, 200, 0.2);
-    }
-    .box3{
-        position: absolute;
-        top: 590px;
-        right: 820px;
-        width: 180px;
-        height: 180px;
-        border-radius: 50%;
-        filter: blur(50px);
-        background: rgba(255, 120, 150, 0.2);
-    }
+	/*  BOX  */
+	.protocol-box {
+		background: rgba(255, 255, 255, 0.03);
+		border-radius: 20px;
+		padding: 40px;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+	}
 
-    /* ===== HEADER ===== */
-    .protocol-header {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 40px;
-        position: relative;
-        z-index: 2;
-    }
+	.box1{
+		position: absolute;
+		top: 300px;
+		right: -10px;
+		width: 280px;
+		height: 280px;
+		border-radius: 50%;
+		filter: blur(50px);
+	}	
+	.box2{
+		position: absolute;
+		top: 50px;
+		right: 1150px;
+		width: 260px;
+		height: 260px;
+		border-radius: 50%;
+		filter: blur(50px);
+	}
+	.box3{
+		position: absolute;
+		top: 700px;
+		right: 820px;
+		width: 180px;
+		height: 180px;
+		border-radius: 50%;
+		filter: blur(50px);
+	}
+    .box4{
+		position: absolute;
+		top: 1100px;
+		right: 620px;
+		width: 180px;
+		height: 180px;
+		border-radius: 50%;
+		filter: blur(50px);
+	}
+	.box1 {
+		background: rgba(79, 209, 255, 0.2);
+	}
+	.box2 {
+		background: rgba(100, 255, 200, 0.2);
+	}
+	.box3 {
+		background: rgba(255, 120, 150, 0.2);
+	}
+    .box4 {
+		background: rgba(255, 253, 120, 0.2);
+	}
 
-    .protocol-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+	/* ===== HEADER ===== */
+	.protocol-header {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		margin-bottom: 40px;
+	}
 
-    .protocol-title {
-        font-size: 28px;
-        font-weight: 700;
-    }
+	.protocol-icon {
+		width: 50px;
+		height: 50px;
+		border-radius: 12px;
+		background: rgba(255, 255, 255, 0.05);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 
-    .protocol-title span {
-        color: #6bfad8;
-    }
+	.protocol-title {
+		font-size: 28px;
+		font-weight: 700;
+	}
 
-    .protocol-sub {
-        font-size: 11px;
-        color: #6b7280;
-        letter-spacing: 2px;
-    }
+	.protocol-sub {
+		font-size: 11px;
+		color: #6b7280;
+		letter-spacing: 2px;
+	}
 
-    /* ===== GRID ===== */
-    .protocol-grid {
-        display: grid;
-        gap: 30px;
-        position: relative;
-        z-index: 2;
-    }
+	/* ===== GRID ===== */
+	.protocol-grid {
+		display: grid;
+		gap: 30px;
+	}
 
-    @media (min-width: 768px) {
-        .protocol-grid {
-            grid-template-columns: 1fr 1fr;
-        }
-    }
+	@media (min-width: 768px) {
+		.protocol-grid {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
 
-    /* ===== ITEM ===== */
-    .protocol-item {
-        display: flex;
-        gap: 15px;
-        align-items: flex-start;
-    }
+	/* ===== ITEM ===== */
+	.protocol-item {
+		display: flex;
+		gap: 15px;
+		align-items: flex-start;
+	}
 
-    .protocol-number {
-        font-size: 24px;
-        font-weight: 900;
-        color: rgba(255,255,255,0.2);
-    }
+	/*  TEXT */
+	.protocol-content h4 {
+		font-size: 16px;
+		font-weight: 600;
+		margin-bottom: 6px;
+	}
 
-    .protocol-content h4 {
-        font-size: 16px;
-        font-weight: 600;
-        margin: 0 0 6px 0;
-    }
+	.protocol-content p {
+		font-size: 14px;
+		color: #9ca3af;
+		line-height: 1.7;
+	}
 
-    .protocol-content p {
-        font-size: 14px;
-        color: #9ca3af;
-        line-height: 1.7;
-        margin: 0;
-    }
 
     /* ===== MY VISUALIZER STYLES ===== */
     .visualizer-container {
@@ -646,6 +660,8 @@
                         <div class="glow box1"></div>
                         <div class="glow box2"></div>
                         <div class="glow box3"></div>
+                        <div class="glow box4"></div>
+
                         <div class="protocol-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 24px; height: 24px;">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />

@@ -27,13 +27,13 @@ export const auth = betterAuth({
 			clientId: env.DISCORD_CLIENT_ID,
 			clientSecret: env.DISCORD_CLIENT_SECRET
 		},
-		google: {
-			clientId: env.GOOGLE_CLIENT_ID,
-			clientSecret: env.GOOGLE_CLIENT_SECRET
-		},
-		facebook: {
-			clientId: env.FACEBOOK_CLIENT_ID,
-			clientSecret: env.FACEBOOK_CLIENT_SECRET
+		// google: {
+		// 	clientId: env.GOOGLE_CLIENT_ID,
+		// 	clientSecret: env.GOOGLE_CLIENT_SECRET
+		// },
+		roblox: {
+			clientId: env.ROBLOX_CLIENT_ID,
+			clientSecret: env.ROBLOX_CLIENT_SECRET
 		}
 	},
 	plugins: [

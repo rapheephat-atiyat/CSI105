@@ -128,7 +128,7 @@
 						<span class="font-bold">ออกจากระบบ</span>
 					</button>
 				{:else}
-					<a href="/login" onclick={() => (isMobileMenuOpen = false)} class="flex w-full items-center justify-center rounded-xl bg-white py-3 font-bold text-black transition-all hover:bg-zinc-200 active:scale-95"> เริ่มเล่นเกม </a>
+					<a href="/signin" onclick={() => (isMobileMenuOpen = false)} class="flex w-full items-center justify-center rounded-xl bg-white py-3 font-bold text-black transition-all hover:bg-zinc-200 active:scale-95"> เริ่มเล่นเกม </a>
 				{/if}
 			</div>
 		</div>
