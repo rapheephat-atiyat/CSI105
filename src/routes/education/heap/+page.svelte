@@ -1,21 +1,29 @@
-<script>
+<script lang="ts">
     import { onMount } from 'svelte';
 
-    function generateRandomArray(size = 10, min = 1, max = 99) {
+    type State = {
+        arr: number[];
+        line: number;
+        comparing: number[];
+        swapping: number[];
+        sorted: number[];
+    };
+
+    function generateRandomArray(size: number = 10, min: number = 1, max: number = 99): number[] {
         return Array.from({ length: size }, () => Math.floor(Math.random() * (max - min + 1)) + min);
     }
     
-    let originalArr = $state(generateRandomArray());
-    let arr = $state([...originalArr]);
+    let originalArr: number[] = $state(generateRandomArray());
+    let arr: number[] = $state([...originalArr]);
     
-    let states = $state([]);
-    let currentStep = $state(0);
-    let isPlaying = $state(false);
-    let speed = $state(100);
-    let timer;
-    let autoLoopTimer;
+    let states: State[] = $state([]);
+    let currentStep: number = $state(0);
+    let isPlaying: boolean = $state(false);
+    let speed: number = $state(100);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let autoLoopTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const codeLines = [
+    const codeLines: string[] = [
         "function heapSort(arr) {",
         "    let n = arr.length;",
         "    for (let i = Math.floor(n/2) - 1; i >= 0; i--)",
@@ -38,7 +46,7 @@
         "}"
     ];
 
-    function highlightCode(line) {
+    function highlightCode(line: string): string {
         let hl = line.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         hl = hl.replace(/\b(function|let|for|if)\b/g, '<span class="syntax-keyword">$1</span>');
         hl = hl.replace(/\b(heapSort|heapify|length|Math|floor)\b/g, '<span class="syntax-function">$1</span>');
@@ -47,13 +55,13 @@
         return hl;
     }
 
-    function generateStates() {
-        let newStates = [];
-        let tempArr = [...originalArr];
-        let n = tempArr.length;
-        let fullySorted = [];
+    function generateStates(): State[] {
+        let newStates: State[] = [];
+        let tempArr: number[] = [...originalArr];
+        let n: number = tempArr.length;
+        let fullySorted: number[] = [];
 
-        function hpf(sz, i) {
+        function hpf(sz: number, i: number): void {
             newStates.push({ arr: [...tempArr], line: 10, comparing: [], swapping: [], sorted: [...fullySorted] });
             let largest = i;
             newStates.push({ arr: [...tempArr], line: 11, comparing: [largest], swapping: [], sorted: [...fullySorted] });
@@ -115,7 +123,7 @@
         fullySorted.push(0);
         newStates.push({ arr: [...tempArr], line: 9, comparing: [], swapping: [], sorted: [...fullySorted] });
         
-        let allSorted = Array.from({length: n}, (_, k) => k);
+        let allSorted: number[] = Array.from({length: n}, (_, k) => k);
         newStates.push({ arr: [...tempArr], line: 9, comparing: [], swapping: [], sorted: allSorted });
         
         states = newStates;
@@ -130,7 +138,7 @@
         }, 500);
     });
 
-    function play() {
+    function play(): void {
         if (currentStep >= states.length - 1) {
             reset();
             return; // reset triggers auto play anyway now if we refactor loop
@@ -141,13 +149,13 @@
         }
     }
 
-    function pause() {
+    function pause(): void {
         isPlaying = false;
         clearTimeout(timer);
         clearTimeout(autoLoopTimer);
     }
 
-    function nextStepAuto() {
+    function nextStepAuto(): void {
         if (!isPlaying) return;
         if (currentStep < states.length - 1) {
             currentStep++;
@@ -167,24 +175,24 @@
         }
     }
 
-    function step() {
+    function step(): void {
         pause();
         if (currentStep < states.length - 1) {
             currentStep++;
         }
     }
 
-    function reset() {
+    function reset(): void {
         pause();
         currentStep = 0;
         originalArr = generateRandomArray();
         generateStates();
     }
 
-    let currentState = $derived(states[currentStep] || { arr: originalArr, line: 1, comparing: [], swapping: [], sorted: [] });
-    let maxVal = $derived(Math.max(...originalArr) || 100);
+    let currentState: State = $derived(states[currentStep] || { arr: originalArr, line: 1, comparing: [], swapping: [], sorted: [] });
+    let maxVal: number = $derived(Math.max(...originalArr) || 100);
 
-    const nodeCoords = [
+    const nodeCoords: { x: number; y: number }[] = [
         { x: 50, y: 15 },
         { x: 30, y: 40 },
         { x: 70, y: 40 },

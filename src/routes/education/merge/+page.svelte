@@ -1,21 +1,29 @@
-<script>
+<script lang="ts">
     import { onMount } from 'svelte';
 
-    function generateRandomArray(size = 10, min = 10, max = 99) {
+    type State = {
+        arr: number[];
+        line: number;
+        comparing: number[];
+        swapping: number[];
+        sorted: number[];
+    };
+
+    function generateRandomArray(size: number = 10, min: number = 10, max: number = 99): number[] {
         return Array.from({ length: size }, () => Math.floor(Math.random() * (max - min + 1)) + min);
     }
     
-    let originalArr = $state(generateRandomArray());
-    let arr = $state([...originalArr]);
+    let originalArr: number[] = $state(generateRandomArray());
+    let arr: number[] = $state([...originalArr]);
     
-    let states = $state([]);
-    let currentStep = $state(0);
-    let isPlaying = $state(false);
-    let speed = $state(100);
-    let timer;
-    let autoLoopTimer;
+    let states: State[] = $state([]);
+    let currentStep: number = $state(0);
+    let isPlaying: boolean = $state(false);
+    let speed: number = $state(100);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let autoLoopTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const codeLines = [
+    const codeLines: string[] = [
         "function mergeSort(arr, l, r) {",
         "    if (l >= r) return;",
         "    let m = Math.floor((l + r) / 2);",
@@ -38,7 +46,7 @@
         "}"
     ];
 
-    function highlightCode(line) {
+    function highlightCode(line: string): string {
         let hl = line.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         hl = hl.replace(/\b(function|let|for|while|if|else|return)\b/g, '<span class="syntax-keyword">$1</span>');
         hl = hl.replace(/\b(mergeSort|length|Math|floor|push)\b/g, '<span class="syntax-function">$1</span>');
@@ -47,13 +55,13 @@
         return hl;
     }
 
-    function generateStates() {
-        let newStates = [];
-        let tempArr = [...originalArr];
-        let n = tempArr.length;
-        let fullySorted = [];
+    function generateStates(): State[] {
+        let newStates: State[] = [];
+        let tempArr: number[] = [...originalArr];
+        let n: number = tempArr.length;
+        let fullySorted: number[] = [];
 
-        function ms(l, r) {
+        function ms(l: number, r: number) {
             newStates.push({ arr: [...tempArr], line: 1, comparing: [], swapping: [], sorted: [...fullySorted] });
             newStates.push({ arr: [...tempArr], line: 2, comparing: [], swapping: [], sorted: [...fullySorted] });
             if (l >= r) {
@@ -61,7 +69,7 @@
                 return;
             }
             
-            let m = Math.floor((l + r) / 2);
+            let m: number = Math.floor((l + r) / 2);
             newStates.push({ arr: [...tempArr], line: 3, comparing: [m], swapping: [], sorted: [...fullySorted] });
             
             newStates.push({ arr: [...tempArr], line: 4, comparing: [], swapping: [], sorted: [...fullySorted] });
@@ -71,8 +79,8 @@
             ms(m + 1, r);
             
             newStates.push({ arr: [...tempArr], line: 6, comparing: [], swapping: [], sorted: [...fullySorted] });
-            let temp = [];
-            let i = l, j = m + 1;
+            let temp: number[] = [];
+            let i: number = l, j: number = m + 1;
             newStates.push({ arr: [...tempArr], line: 7, comparing: [i, j], swapping: [], sorted: [...fullySorted] });
             
             while (i <= m && j <= r) {
@@ -117,7 +125,7 @@
         
         ms(0, n - 1);
         
-        let allSorted = Array.from({length: n}, (_, k) => k);
+        let allSorted: number[] = Array.from({length: n}, (_, k) => k);
         newStates.push({ arr: [...tempArr], line: 20, comparing: [], swapping: [], sorted: allSorted });
         
         states = newStates;
@@ -132,7 +140,7 @@
         }, 500);
     });
 
-    function play() {
+    function play(): void {
         if (currentStep >= states.length - 1) {
             reset();
             return; // reset triggers auto play anyway now if we refactor loop
@@ -143,13 +151,13 @@
         }
     }
 
-    function pause() {
+    function pause(): void {
         isPlaying = false;
         clearTimeout(timer);
         clearTimeout(autoLoopTimer);
     }
 
-    function nextStepAuto() {
+    function nextStepAuto(): void {
         if (!isPlaying) return;
         if (currentStep < states.length - 1) {
             currentStep++;
@@ -169,22 +177,22 @@
         }
     }
 
-    function step() {
+    function step(): void {
         pause();
         if (currentStep < states.length - 1) {
             currentStep++;
         }
     }
 
-    function reset() {
+    function reset(): void {
         pause();
         currentStep = 0;
         originalArr = generateRandomArray();
         generateStates();
     }
 
-    let currentState = $derived(states[currentStep] || { arr: originalArr, line: 1, comparing: [], swapping: [], sorted: [] });
-    let maxVal = $derived(Math.max(...originalArr) || 100);
+    let currentState: State = $derived(states[currentStep] || { arr: originalArr, line: 1, comparing: [], swapping: [], sorted: [] });
+    let maxVal: number = $derived(Math.max(...originalArr) || 100);
 </script>
 
 <style>
