@@ -236,7 +236,7 @@
 			<span class="size-1.5 shrink-0 animate-pulse rounded-full bg-cyan-400" style="box-shadow: 0 0 6px #22d3ee;"></span>
 			<span class="font-mono text-[11px] tracking-widest text-cyan-400/70 uppercase"> Ping </span>
 			<canvas bind:this={waveCanvas} width="80" height="28" class="block"></canvas>
-			<span class="min-w-[44px] text-right font-mono text-[13px] font-semibold text-cyan-400">
+			<span class="min-w-11 text-right font-mono text-[13px] font-semibold text-cyan-400">
 				{ping} ms
 			</span>
 		</div>
@@ -314,7 +314,7 @@
 				<div class="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-blue-600/10 blur-[80px]"></div>
 
 				<div class="relative z-10 flex flex-col items-center">
-					<div class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-tr from-blue-600 to-indigo-500 p-[2px] shadow-[0_0_30px_rgba(59,130,246,0.2)] sm:mb-6 sm:h-24 sm:w-24">
+					<div class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-tr from-blue-600 to-indigo-500 p-0.5 shadow-[0_0_30px_rgba(59,130,246,0.2)] sm:mb-6 sm:h-24 sm:w-24">
 						<div class="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-neutral-950/90 text-2xl font-black text-white sm:text-3xl">
 							<img src={user?.image ?? `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id ?? 'guest'}`} alt="avatar" class="h-full w-full object-cover" />
 						</div>
