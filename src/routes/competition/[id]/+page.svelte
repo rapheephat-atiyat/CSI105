@@ -203,7 +203,7 @@
 							<p class="font-mono text-[10px] tracking-widest text-zinc-500 uppercase">เลือกอัลกอริทึมที่จะใช้งาน</p>
 						</div>
 					</div>
-					<div class="custom-scrollbar relative z-10 grid flex-1 gap-4 overflow-y-auto p-6 sm:grid-cols-2 lg:p-10">
+					<div class="custom-scrollbar relative z-10 grid flex-1 gap-4 overflow-y-auto p-6 sm:grid-cols-2 lg:p-3">
 						{#each algorithms as algo, i}
 							<button class="group relative flex flex-col overflow-hidden rounded-2xl border p-6 text-left transition-all duration-300 {selectedAlgoIndex === i ? 'border-blue-500/50 bg-blue-500/10' : 'border-white/5 bg-black/20 hover:border-white/20'}" onclick={() => selectAlgo(i)} disabled={!isHost}>
 								{#if selectedAlgoIndex === i}
