@@ -1,3 +1,7 @@
+<script>
+	import { goto } from "$app/navigation";
+
+</script>
 <div>
 	<section class="section">
 		<div class="grid">
@@ -20,7 +24,7 @@
 						<li>Visual Big O Notations</li>
 						<li>Step-by-step Execution</li>
 					</ul>
-					<button class="btn primary">ENTER CLASSROOM »</button>
+					<button class="btn primary" onclick={() => goto("/education")}>ENTER CLASSROOM »</button>
 				</div>
 			</div>
 			<!-- Card 2 COMPETITION -->
@@ -38,7 +42,7 @@
 					<p>Join live sort-wars. Input codes and rank globally against top-tier architects.</p>
 				</div>
 				<div class="card-footer">
-					<button class="btn secondary">JOIN BATTLE »</button>
+					<button class="btn secondary" onclick={() => goto("/lobby")}>JOIN BATTLE »</button>
 				</div>
 			</div>
 			<!-- Card 3 PRACTICE -->
@@ -56,7 +60,7 @@
 					<p>Laboratory workbench. Easy and Hard modes for active experimentation with raw data.</p>
 				</div>
 				<div class="card-footer">
-					<button class="btn tertiary">OPEN WORKBENCH »</button>
+					<button class="btn tertiary" onclick={() => goto("/practice")}>OPEN WORKBENCH »</button>
 				</div>
 			</div>
 		</div>
