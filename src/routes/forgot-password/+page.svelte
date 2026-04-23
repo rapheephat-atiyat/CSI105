@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Background from '$lib/components/ui/Background.svelte';
 	import { authClient } from '$lib/client/auth';
 	import { goto } from '$app/navigation';
 	import { Loader2, Mail, KeyRound, ArrowLeft } from 'lucide-svelte';
